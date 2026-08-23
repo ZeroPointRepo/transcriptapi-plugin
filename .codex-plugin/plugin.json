@@ -1,7 +1,7 @@
 {
   "name": "transcriptapi",
-  "version": "1.1.1",
-  "description": "YouTube transcripts, captions, video and channel search, channel browsing and playlist extraction for AI agents — 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
+  "version": "1.2.0",
+  "description": "YouTube MCP + YouTube Skill for AI agents — YouTube transcripts, captions, subtitles, video and channel search, channel browsing and playlist extraction. 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
   "author": {
     "name": "TranscriptAPI",
     "email": "hello@transcriptapi.com",
@@ -26,8 +26,8 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "TranscriptAPI — YouTube for AI Agents",
-    "shortDescription": "YouTube transcripts, captions, search and channel data — MCP tools + one skill.",
+    "displayName": "YouTube MCP + Skill — TranscriptAPI",
+    "shortDescription": "YouTube MCP + YouTube Skill for AI agents — transcripts, captions, search, channels and playlists.",
     "longDescription": "One Agent Plugins 1.0.0 package that gives any compliant agent reliable access to YouTube: video transcripts, timestamped captions and subtitles, video and channel search, within-channel search, channel browsing and playlist contents. Ships a hosted MCP server (6 tools, OAuth 2.1, no key handling) plus a single comprehensive `youtube` skill that routes each request to the right tool, keeps credit spend low, and falls back to the REST API for clients that load skills without MCP. Free tier: 100 credits, no card. TranscriptAPI is a third-party, independent service. It is not affiliated with, endorsed by, or sponsored by YouTube or Google.",
     "developerName": "TranscriptAPI",
     "category": "Productivity",
