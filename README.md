@@ -545,7 +545,7 @@ It prints `Valid skill`.
 python .github/scripts/check_conformance.py
 ```
 
-CI runs all three on every push and weekly on a schedule, so spec drift surfaces here rather than in your client. See [SECURITY.md](SECURITY.md).
+CI runs the skill validation and the conformance checker on every pull request. The `ajv` step above is the canonical schema check — `check_conformance.py` enforces the same rules plus the ones a schema can't express, so running it locally is equivalent. See [SECURITY.md](SECURITY.md).
 
 ---
 

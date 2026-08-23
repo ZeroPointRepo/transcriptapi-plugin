@@ -36,5 +36,6 @@ for d in skills/*/; do skills-ref validate "$d"; done
 python .github/scripts/check_conformance.py
 ```
 
-All three must pass. CI runs exactly this on every push and weekly on a schedule — see
-[`.github/workflows/validate-plugin.yml`](.github/workflows/validate-plugin.yml).
+All three must pass. CI runs steps 2 and 3 on every pull request — see
+[`.github/workflows/validate-plugin.yml`](.github/workflows/validate-plugin.yml). Step 1 is the
+canonical schema check; `check_conformance.py` enforces the same rules, so CI doesn't repeat it.
