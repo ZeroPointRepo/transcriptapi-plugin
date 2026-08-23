@@ -10,7 +10,7 @@
 
 <p align="center">
   <b>The complete YouTube toolkit as a single Agent Plugin.</b><br/>
-  6 hosted MCP tools + 13 drop-in skills — transcripts, captions, video &amp; channel search, channel browsing, playlist extraction and new-upload polling.<br/>
+  6 hosted MCP tools + one comprehensive skill — transcripts, captions, video &amp; channel search, channel browsing, playlist extraction and new-upload polling.<br/>
   One install. OAuth sign-in. No API key to manage. Free tier, no card.
 </p>
 
@@ -46,7 +46,7 @@ One install gives your agent both halves:
 | Component | What it does |
 |---|---|
 | **MCP server** (`transcriptapi`) | 6 hosted tools over streamable HTTP with OAuth 2.1 — `get_youtube_transcript`, `search_youtube`, `get_channel_latest_videos`, `search_channel_videos`, `list_channel_videos`, `list_playlist_videos`. No key handling: your agent signs you in on first use. |
-| **13 skills** (`skills/`) | Teach the agent *when* to reach for YouTube data, which tool is cheapest, and how not to burn credits — plus a full REST fallback path for agents without MCP. Deliberately overlapping trigger vocabulary so the right skill fires however you phrase the request. |
+| **Skill** (`youtube`) | Teaches the agent *when* to reach for YouTube data, which tool answers each question, and how not to burn credits — with a full REST fallback for clients that load skills but not MCP servers. |
 
 **Just ask, in plain English:**
 
@@ -68,7 +68,7 @@ Most YouTube integrations do one thing — pull a single transcript. **This is a
 | ---------------------------------------- | ----------------- | ------------------- |
 | Packaging                                | ✅ Agent Plugins 1.0.0 | ❌ Per-client manifests |
 | Hosting                                  | ✅ Remote (no local install) | ❌ Local stdio install |
-| Tools                                    | ✅ 6 tools + 13 skills | ❌ 1 (transcript only) |
+| Tools                                    | ✅ 6 tools + a skill | ❌ 1 (transcript only) |
 | YouTube search                           | ✅ Yes             | ❌ No |
 | Channel & playlist extraction            | ✅ Yes             | ❌ No |
 | Latest-uploads monitoring (free)         | ✅ Yes             | ❌ No |
@@ -139,33 +139,29 @@ The first YouTube question you ask opens a TranscriptAPI OAuth sign-in (free acc
 
 ### Skills only (no MCP)
 
-Every skill also works standalone against the REST API with an API key:
+The skill also works standalone against the REST API with an API key:
 
 ```bash
-# All 13 skills
 npx skills add ZeroPointRepo/transcriptapi-plugin
-
-# Just the one you want — youtube-full covers everything
-npx skills add ZeroPointRepo/transcriptapi-plugin --skill youtube-full
 ```
 
 <details>
 <summary><b>OpenClaw · Hermes · manual</b></summary>
 
-**🦞 OpenClaw (ClawdBot/Moltbot):**
+**🦞 OpenClaw (ClawdBot/Moltbot):** installs from the ClawHub registry, which serves the standalone skills repo:
 ```bash
 npx clawhub@latest install youtube-full
 ```
 
 **Hermes Agent:**
 ```bash
-hermes skills install skills-sh/ZeroPointRepo/transcriptapi-plugin/skills/youtube-full
+hermes skills install skills-sh/ZeroPointRepo/transcriptapi-plugin/skills/youtube
 ```
 
 **Manual:**
 ```bash
 git clone https://github.com/ZeroPointRepo/transcriptapi-plugin.git
-cp -r transcriptapi-plugin/skills/youtube-full ~/.claude/skills/
+cp -r transcriptapi-plugin/skills/youtube ~/.claude/skills/
 ```
 
 </details>
@@ -378,25 +374,30 @@ Every video in a YouTube playlist (PL/UU/LL/FL/OL IDs supported). Process entire
 
 ---
 
-## 🎯 The 13 skills
+## 🎯 The `youtube` skill
 
-`youtube` is the MCP-aware skill — it teaches the agent to drive the 6 tools above. `youtube-full` is the REST equivalent and the best pick if you installed skills without the MCP server. The rest are narrower variants and aliases, so the right skill fires however you phrase the request.
+One skill covers everything. It teaches the agent *when* YouTube is the right source, which tool answers each kind of question, and how not to burn credits — the judgement the MCP tool definitions can't carry on their own.
 
-| Skill | What it does |
-|-------|--------------|
-| **youtube** | MCP-first — when and how to use each of the 6 hosted tools, and how not to waste credits |
-| **youtube-full** | Complete REST toolkit — transcripts + search + channels + playlists |
-| **transcript** | Extract a transcript from any YouTube video with timestamps |
-| **captions** | Get closed captions / CC from YouTube videos |
-| **subtitles** | Extract subtitles from YouTube videos |
-| **video-transcript** | Convert YouTube videos to text transcripts |
-| **youtube-search** | Search YouTube for videos and channels |
-| **youtube-channels** | Browse channel uploads, get latest videos, resolve `@handles` |
-| **youtube-playlist** | Fetch every video from a YouTube playlist |
-| **youtube-data** | YouTube video and channel data — lightweight alternative to Google's API |
-| **youtube-api** | YouTube API access for agents — no Google quota hassle |
-| **transcriptapi** | Full TranscriptAPI access across all endpoints |
-| **yt** | Quick YouTube utility for fast lookups |
+It handles both data paths automatically:
+
+- **MCP available** → drives the 6 hosted tools above. OAuth, no key.
+- **MCP not available** → falls back to the REST API with a `TRANSCRIPT_API_KEY`, so the skill still works in clients that load skills but not MCP servers.
+
+Structured for [progressive disclosure](https://agentskills.io/specification#progressive-disclosure), so the agent pays for detail only when it needs it:
+
+```
+skills/youtube/
+├── SKILL.md                    # routing, credit discipline, workflows (~130 lines)
+└── references/
+    ├── mcp-tools.md            # full parameter reference for the 6 tools
+    ├── rest-api.md             # REST fallback — endpoints, curl, validation rules
+    ├── auth-setup.md           # getting and persisting an API key
+    └── errors.md               # error codes, retry policy, false alarms
+```
+
+Only `name` + `description` (~100 tokens) load at startup. The body loads when the skill activates; the references load only when actually consulted.
+
+> **Looking for the granular skills?** v1.0.0 shipped 13 overlapping skills (`transcript`, `captions`, `subtitles`, `yt`, …). They were alias variants of one another, and thirteen near-identical descriptions competing at startup made skill selection *worse*, not better. They're consolidated here. The standalone, API-key-based versions still live in [ZeroPointRepo/youtube-skills](https://github.com/ZeroPointRepo/youtube-skills).
 
 ---
 
@@ -507,10 +508,8 @@ Three more worth knowing:
 transcriptapi-plugin/
 ├── plugin.json                 # Agent Plugins 1.0.0 manifest (canonical $schema)
 ├── mcp.json                    # hosted MCP server — streamable-http, OAuth, no keys
-├── skills/                     # 13 skills, one per directory, each with SKILL.md
-│   ├── youtube/                #   MCP-first — drives the 6 hosted tools
-│   ├── youtube-full/           #   REST-first — the full toolkit
-│   └── …                       #   transcript · captions · subtitles · search · channels · playlists …
+├── skills/
+│   └── youtube/                # one skill: SKILL.md + references/ (progressive disclosure)
 ├── assets/                     # black-background brand marks (SVG + PNG 64→1024)
 ├── server.json                 # MCP Registry descriptor
 ├── smithery.yaml · glama.json  # directory listings
@@ -544,7 +543,7 @@ pip install "git+https://github.com/agentskills/agentskills.git#subdirectory=ski
 for d in skills/*/; do skills-ref validate "$d"; done
 ```
 
-All 13 print `Valid skill`.
+It prints `Valid skill`.
 
 **3. The normative requirements a schema can't express** — path safety, discovery depth, reverse-domain extension namespaces, transport rules:
 
