@@ -16,20 +16,9 @@
 
 <p align="center">
   <a href="https://agent-plugins.org/specification"><img src="https://img.shields.io/badge/Agent_Plugins-1.0.0-6E56CF?style=for-the-badge" alt="Agent Plugins 1.0.0"/></a>
-  <a href="https://github.com/ZeroPointRepo/transcriptapi-plugin/actions/workflows/validate-plugin.yml"><img src="https://img.shields.io/github/actions/workflow/status/ZeroPointRepo/transcriptapi-plugin/validate-plugin.yml?style=for-the-badge&label=schema%20valid" alt="Schema validation"/></a>
-  <a href="https://github.com/ZeroPointRepo/awesome-agent-plugins"><img src="https://img.shields.io/badge/Listed-awesome--agent--plugins-blueviolet?style=for-the-badge" alt="Listed in awesome-agent-plugins"/></a>
-</p>
-
-<p align="center">
-  <a href="https://transcriptapi.com"><img src="https://img.shields.io/badge/Website-transcriptapi.com-FF3B00?style=for-the-badge" alt="Website"/></a>
-  <a href="https://transcriptapi.com/docs"><img src="https://img.shields.io/badge/Docs-API_Reference-06B6D4?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Docs"/></a>
-  <a href="https://transcriptapi.com/swagger"><img src="https://img.shields.io/badge/Swagger-Try_API-85EA2D?style=for-the-badge&logo=swagger&logoColor=white" alt="Swagger"/></a>
+  <a href="https://github.com/ZeroPointRepo/transcriptapi-plugin/actions/workflows/validate-plugin.yml"><img src="https://img.shields.io/github/actions/workflow/status/ZeroPointRepo/transcriptapi-plugin/validate-plugin.yml?style=for-the-badge&label=spec%20valid" alt="Spec conformance"/></a>
+  <a href="https://transcriptapi.com/docs"><img src="https://img.shields.io/badge/Docs-transcriptapi.com-06B6D4?style=for-the-badge" alt="Docs"/></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-4CAF50?style=for-the-badge" alt="MIT License"/></a>
-</p>
-
-<p align="center">
-  <a href="https://cursor.com/en/install-mcp?name=transcript-api&config=eyJ1cmwiOiJodHRwczovL3RyYW5zY3JpcHRhcGkuY29tL21jcCJ9"><img alt="Install in Cursor" src="https://img.shields.io/badge/Cursor-Install-000000?style=for-the-badge&logo=cursor&logoColor=white"/></a>
-  <a href="https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22transcript-api%22%2C%22url%22%3A%22https%3A%2F%2Ftranscriptapi.com%2Fmcp%22%7D"><img alt="Install in VS Code" src="https://img.shields.io/badge/VS_Code-Install-0098FF?style=for-the-badge&logo=visualstudiocode&logoColor=white"/></a>
 </p>
 
 > **Powering 15M+ transcripts every month** · 500K+ transcripts processed daily · 49ms median response time
@@ -185,6 +174,11 @@ cp -r transcriptapi-plugin/skills/youtube ~/.claude/skills/
 <summary><b>Manual MCP configuration for 20+ other clients</b></summary>
 
 The MCP endpoint is `https://transcriptapi.com/mcp`. Get an API key from your [dashboard](https://transcriptapi.com/dashboard/api-keys) if your client doesn't do OAuth.
+
+One-click, if you'd rather skip the config — note these add the **MCP server only**, not the bundled skill:
+
+<a href="https://cursor.com/en/install-mcp?name=transcript-api&config=eyJ1cmwiOiJodHRwczovL3RyYW5zY3JpcHRhcGkuY29tL21jcCJ9"><img alt="Add to Cursor" src="https://img.shields.io/badge/Cursor-Add_MCP-000000?style=flat-square&logo=cursor&logoColor=white"/></a>
+<a href="https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22transcript-api%22%2C%22url%22%3A%22https%3A%2F%2Ftranscriptapi.com%2Fmcp%22%7D"><img alt="Add to VS Code" src="https://img.shields.io/badge/VS_Code-Add_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white"/></a>
 
 **Claude Desktop & Web** — Settings → **Connectors** → **Add custom connector** → name `TranscriptAPI`, URL `https://transcriptapi.com/mcp` → **Connect**. [Full guide →](https://transcriptapi.com/docs/mcp/claude)
 
