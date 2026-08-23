@@ -22,11 +22,19 @@ We aim to acknowledge reports within 2 business days.
 ## Verify this package yourself
 
 ```bash
+# 1. manifests against the canonical schemas
 curl -sO https://agent-plugins.org/schemas/1.0.0/plugin.schema.json
 curl -sO https://agent-plugins.org/schemas/1.0.0/mcp.schema.json
 npx -y ajv-cli@5 validate --spec=draft2020 -s plugin.schema.json -d plugin.json
 npx -y ajv-cli@5 validate --spec=draft2020 -s mcp.schema.json    -d mcp.json
+
+# 2. every skill against the Agent Skills specification (Agent Plugins §7.1)
+pip install "git+https://github.com/agentskills/agentskills.git#subdirectory=skills-ref"
+for d in skills/*/; do skills-ref validate "$d"; done
+
+# 3. normative requirements a schema cannot express
+python .github/scripts/check_conformance.py
 ```
 
-Both must print `valid`. CI runs exactly this on every push — see
+All three must pass. CI runs exactly this on every push and weekly on a schedule — see
 [`.github/workflows/validate-plugin.yml`](.github/workflows/validate-plugin.yml).

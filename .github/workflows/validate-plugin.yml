@@ -5,10 +5,14 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  schedule:
+    # The spec and its schemas are living documents — re-check weekly so drift
+    # surfaces here rather than in a user's client.
+    - cron: '17 4 * * 1'
 
 jobs:
   validate:
-    name: Validate against Agent Plugins 1.0.0 schemas
+    name: Agent Plugins 1.0.0 conformance
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,6 +21,11 @@ jobs:
         with:
           node-version: '20'
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # --- Schema conformance, against the LIVE canonical schemas -------------
       - name: Fetch canonical schemas
         run: |
           curl -fsSL -o /tmp/plugin.schema.json https://agent-plugins.org/schemas/1.0.0/plugin.schema.json
@@ -28,20 +37,31 @@ jobs:
       - name: Validate mcp.json
         run: npx -y ajv-cli@5 validate --spec=draft2020 -s /tmp/mcp.schema.json -d mcp.json
 
-      - name: Every skill has a SKILL.md with frontmatter
+      # --- Agent Plugins §7.1: skills MUST conform to the Agent Skills spec ---
+      # A conformant client SKIPS a non-conforming skill, so a schema-valid
+      # manifest with broken skills still ships a broken plugin. Use the
+      # official reference validator, not a homegrown frontmatter check.
+      - name: Install skills-ref (official Agent Skills validator)
         run: |
-          fail=0
+          git clone --depth 1 https://github.com/agentskills/agentskills.git /tmp/agentskills
+          pip install --quiet /tmp/agentskills/skills-ref
+
+      - name: Validate every skill against the Agent Skills specification
+        run: |
+          fail=0; n=0
           for d in skills/*/; do
-            f="${d}SKILL.md"
-            if [ ! -f "$f" ]; then echo "::error::missing $f"; fail=1; continue; fi
-            head -1 "$f" | grep -q '^---$' || { echo "::error::$f missing YAML frontmatter"; fail=1; }
+            n=$((n+1))
+            if skills-ref validate "$d" >/dev/null 2>&1; then
+              echo "PASS  $d"
+            else
+              echo "::error::$d does not conform to the Agent Skills specification"
+              skills-ref validate "$d" 2>&1 | sed 's/^/      /'
+              fail=1
+            fi
           done
-          echo "checked $(ls -1d skills/*/ | wc -l) skills"
+          echo "validated $n skills"
           exit $fail
 
-      - name: No secrets committed
-        run: |
-          if grep -rIn --exclude-dir=.git -E 'sk_[A-Za-z0-9]{16,}' . ; then
-            echo "::error::possible API key committed"; exit 1
-          fi
-          echo "clean"
+      # --- Normative requirements a schema cannot express --------------------
+      - name: Check specification conformance
+        run: python .github/scripts/check_conformance.py

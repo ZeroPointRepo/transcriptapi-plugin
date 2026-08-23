@@ -526,7 +526,9 @@ The canonical package is `plugin.json` + `skills/` + `mcp.json`. Everything else
 
 ## ✅ Verify this package
 
-No secrets, no executable code, no `stdio` servers — nothing here runs on your machine. Check it yourself:
+No secrets, no executable code, no `stdio` servers — nothing here runs on your machine. Check it yourself.
+
+**1. Manifests against the canonical schemas:**
 
 ```bash
 curl -sO https://agent-plugins.org/schemas/1.0.0/plugin.schema.json
@@ -535,7 +537,22 @@ npx -y ajv-cli@5 validate --spec=draft2020 -s plugin.schema.json -d plugin.json
 npx -y ajv-cli@5 validate --spec=draft2020 -s mcp.schema.json    -d mcp.json
 ```
 
-Both print `valid`. CI runs exactly this on every push. See [SECURITY.md](SECURITY.md).
+**2. Every skill against the Agent Skills specification.** This is the check that actually matters: §7.1 requires skills to conform, and a conformant client **silently skips** any skill that doesn't. A plugin can have perfect manifests and still ship skills that never load.
+
+```bash
+pip install "git+https://github.com/agentskills/agentskills.git#subdirectory=skills-ref"
+for d in skills/*/; do skills-ref validate "$d"; done
+```
+
+All 13 print `Valid skill`.
+
+**3. The normative requirements a schema can't express** — path safety, discovery depth, reverse-domain extension namespaces, transport rules:
+
+```bash
+python .github/scripts/check_conformance.py
+```
+
+CI runs all three on every push and weekly on a schedule, so spec drift surfaces here rather than in your client. See [SECURITY.md](SECURITY.md).
 
 ---
 
