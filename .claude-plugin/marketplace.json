@@ -6,15 +6,15 @@
     "url": "https://transcriptapi.com"
   },
   "metadata": {
-    "description": "YouTube transcript, search and channel plugins by TranscriptAPI — 15M+ transcripts/month.",
-    "version": "1.1.1"
+    "description": "YouTube MCP and YouTube Skill packages by TranscriptAPI — 15M+ transcripts/month.",
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "transcriptapi",
       "source": "./",
-      "description": "YouTube transcripts, captions, video and channel search, channel browsing and playlist extraction for AI agents — 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
-      "version": "1.1.1",
+      "description": "YouTube MCP + YouTube Skill for AI agents — YouTube transcripts, captions, subtitles, video and channel search, channel browsing and playlist extraction. 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
+      "version": "1.2.0",
       "author": {
         "name": "TranscriptAPI",
         "email": "hello@transcriptapi.com",
@@ -25,6 +25,8 @@
       "license": "MIT",
       "category": "data",
       "keywords": [
+        "youtube-mcp",
+        "youtube-skill",
         "youtube",
         "transcript",
         "captions",

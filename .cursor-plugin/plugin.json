@@ -1,7 +1,7 @@
 {
   "name": "transcriptapi",
-  "version": "1.1.1",
-  "description": "YouTube transcripts, captions, video and channel search, channel browsing and playlist extraction for AI agents — 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
+  "version": "1.2.0",
+  "description": "YouTube MCP + YouTube Skill for AI agents — YouTube transcripts, captions, subtitles, video and channel search, channel browsing and playlist extraction. 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
   "author": {
     "name": "TranscriptAPI",
     "email": "hello@transcriptapi.com",

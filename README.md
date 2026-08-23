@@ -6,11 +6,11 @@
   </a>
 </p>
 
-<h1 align="center">TranscriptAPI — YouTube for AI Agents</h1>
+<h1 align="center">YouTube MCP + YouTube Skill for AI Agents</h1>
 
 <p align="center">
-  <b>The complete YouTube toolkit as a single Agent Plugin.</b><br/>
-  6 hosted MCP tools + one comprehensive skill — transcripts, captions, video &amp; channel search, channel browsing, playlist extraction and new-upload polling.<br/>
+  <b>The complete YouTube toolkit as a single Agent Plugin, by <a href="https://transcriptapi.com">TranscriptAPI</a>.</b><br/>
+  YouTube transcripts, captions and subtitles, video &amp; channel search, channel browsing, playlist extraction and new-upload polling — 6 hosted MCP tools plus one comprehensive skill.<br/>
   One install. OAuth sign-in. No API key to manage. Free tier, no card.
 </p>
 

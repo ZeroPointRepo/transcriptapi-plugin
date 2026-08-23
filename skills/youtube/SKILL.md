@@ -93,8 +93,11 @@ Full parameters, defaults and response shapes:
 - **Search inside a channel** with `search_channel_videos` rather than listing every video and
   filtering yourself.
 - **Paginate only while the user still needs more.** Stop when the question is answered.
-- **`format="text"`** is the default and is cheaper to reason over. Use `"json"` only when you
-  need exact per-segment timestamps to cite or seek.
+- **Ask for `format=text`, don't assume it.** Markdown text is cheaper to reason over than
+  per-segment JSON, and it *is* the MCP default — but the **REST default is `json`**, and
+  REST also defaults `send_metadata` to `false`. On the REST path pass
+  `format=text&include_timestamp=true&send_metadata=true` explicitly. Use `json` only when
+  you need exact per-segment timestamps to cite or seek.
 
 ## Common workflows
 
