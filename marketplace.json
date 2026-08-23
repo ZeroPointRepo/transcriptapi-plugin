@@ -1,22 +1,22 @@
 {
   "name": "transcriptapi",
   "owner": {
-    "name": "Zero Point Studio",
+    "name": "TranscriptAPI",
     "email": "hello@transcriptapi.com",
     "url": "https://transcriptapi.com"
   },
   "metadata": {
     "description": "YouTube transcript, search and channel plugins by TranscriptAPI — 15M+ transcripts/month.",
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "plugins": [
     {
       "name": "transcriptapi",
       "source": "./",
       "description": "YouTube transcripts, captions, video and channel search, channel browsing and playlist extraction for AI agents — 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "author": {
-        "name": "Zero Point Studio",
+        "name": "TranscriptAPI",
         "email": "hello@transcriptapi.com",
         "url": "https://transcriptapi.com"
       },

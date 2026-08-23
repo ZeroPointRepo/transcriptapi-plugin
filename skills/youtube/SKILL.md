@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Requires network access to transcriptapi.com. No runtimes, binaries or system packages needed. Works with the bundled MCP server (OAuth, no key) or with a TRANSCRIPT_API_KEY over plain HTTPS."
 metadata:
   version: "2.0.0"
-  publisher: "Zero Point Studio"
+  publisher: "TranscriptAPI"
   homepage: "https://transcriptapi.com"
   docs: "https://transcriptapi.com/docs"
   mcp-endpoint: "https://transcriptapi.com/mcp"

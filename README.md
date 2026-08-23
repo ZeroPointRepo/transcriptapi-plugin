@@ -600,5 +600,5 @@ TranscriptAPI is an independent product and is not affiliated with, endorsed by,
 ---
 
 <p align="center">
-  <sub>© 2026 Zero Point Studio d.o.o. · Released under the <a href="./LICENSE">MIT License</a></sub>
+  <sub>© 2026 TranscriptAPI · Released under the <a href="./LICENSE">MIT License</a></sub>
 </p>
