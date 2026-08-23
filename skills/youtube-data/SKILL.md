@@ -1,15 +1,20 @@
 ---
 name: youtube-data
 description: "Use when structured YouTube data is needed: pasted video/channel/playlist links, transcripts for analysis, video metadata, channel upload history, search results, or playlist contents — without Google API quotas or OAuth. Triggers on YouTube URLs, creator names, topic research, or any request needing YouTube content, even if not mentioned explicitly. Not for uploads, account management, or written-source-only research."
-version: "1.5.0"
-user-invocable: true
-compatibility: Requires internet access to reach transcriptapi.com. No additional runtimes or dependencies needed.
-required_environment_variables:
-  - name: TRANSCRIPT_API_KEY
-    prompt: Your TranscriptAPI key (starts with sk_)
-    help: Free account at https://transcriptapi.com — 100 credits, no card required. Or let the agent create one for you.
-    required_for: all API requests
-metadata: {"openclaw":{"emoji":"▶️","requires":{"env":["TRANSCRIPT_API_KEY"]},"primaryEnv":"TRANSCRIPT_API_KEY","homepage":"https://transcriptapi.com"},"hermes":{"tags":["youtube","transcripts","video","search","channels","playlists","data","metadata"],"category":"media"}}
+license: MIT
+compatibility: "Requires internet access to reach transcriptapi.com. No additional runtimes or dependencies needed."
+metadata:
+  version: "1.5.0"
+  publisher: "Zero Point Studio"
+  homepage: "https://transcriptapi.com"
+  user-invocable: "true"
+  requires-env: "TRANSCRIPT_API_KEY"
+  env-prompt: "Your TranscriptAPI key (starts with sk_)"
+  env-help: "Free account at https://transcriptapi.com - 100 credits, no card required. Or let the agent create one for you."
+  openclaw-emoji: "▶️"
+  openclaw-primary-env: "TRANSCRIPT_API_KEY"
+  hermes-category: "media"
+  hermes-tags: "youtube, transcripts, video, search, channels, playlists, data, metadata"
 ---
 
 # YouTube Data

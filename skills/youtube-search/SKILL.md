@@ -1,15 +1,20 @@
 ---
 name: youtube-search
 description: "Use when the user wants to find YouTube content on any topic: searching for videos or channels, finding creators who cover a subject, discovering tutorials, talks, or expert discussions, or looking up a channel by name or handle. Also use proactively when the user wants to research a topic and YouTube is a good source. Not for account management or written-source-only research."
-version: "1.5.0"
-user-invocable: true
-compatibility: Requires internet access to reach transcriptapi.com. No additional runtimes or dependencies needed.
-required_environment_variables:
-  - name: TRANSCRIPT_API_KEY
-    prompt: Your TranscriptAPI key (starts with sk_)
-    help: Free account at https://transcriptapi.com — 100 credits, no card required. Or let the agent create one for you.
-    required_for: all API requests
-metadata: {"openclaw":{"emoji":"▶️","requires":{"env":["TRANSCRIPT_API_KEY"]},"primaryEnv":"TRANSCRIPT_API_KEY","homepage":"https://transcriptapi.com"},"hermes":{"tags":["youtube","search","video","channels","discovery","research"],"category":"media"}}
+license: MIT
+compatibility: "Requires internet access to reach transcriptapi.com. No additional runtimes or dependencies needed."
+metadata:
+  version: "1.5.0"
+  publisher: "Zero Point Studio"
+  homepage: "https://transcriptapi.com"
+  user-invocable: "true"
+  requires-env: "TRANSCRIPT_API_KEY"
+  env-prompt: "Your TranscriptAPI key (starts with sk_)"
+  env-help: "Free account at https://transcriptapi.com - 100 credits, no card required. Or let the agent create one for you."
+  openclaw-emoji: "▶️"
+  openclaw-primary-env: "TRANSCRIPT_API_KEY"
+  hermes-category: "media"
+  hermes-tags: "youtube, search, video, channels, discovery, research"
 ---
 
 # YouTube Search
