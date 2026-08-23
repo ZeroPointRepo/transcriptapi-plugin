@@ -1,14 +1,11 @@
 name: Validate Agent Plugin
 
+# Runs on pull requests only. This repository is static JSON and markdown that
+# changes rarely, and every change lands through a PR — so validating on both
+# push and PR just ran the same checks twice.
 on:
-  push:
-    branches: [main]
   pull_request:
   workflow_dispatch:
-  schedule:
-    # The spec and its schemas are living documents — re-check weekly so drift
-    # surfaces here rather than in a user's client.
-    - cron: '17 4 * * 1'
 
 jobs:
   validate:
@@ -17,40 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      # --- Schema conformance, against the LIVE canonical schemas -------------
-      - name: Fetch canonical schemas
-        run: |
-          curl -fsSL -o /tmp/plugin.schema.json https://agent-plugins.org/schemas/1.0.0/plugin.schema.json
-          curl -fsSL -o /tmp/mcp.schema.json    https://agent-plugins.org/schemas/1.0.0/mcp.schema.json
-
-      - name: Validate plugin.json
-        run: npx -y ajv-cli@5 validate --spec=draft2020 -s /tmp/plugin.schema.json -d plugin.json
-
-      - name: Validate mcp.json
-        run: npx -y ajv-cli@5 validate --spec=draft2020 -s /tmp/mcp.schema.json -d mcp.json
-
-      # --- Agent Plugins §7.1: skills MUST conform to the Agent Skills spec ---
-      # A conformant client SKIPS a non-conforming skill, so a schema-valid
-      # manifest with broken skills still ships a broken plugin. Use the
-      # official reference validator, not a homegrown frontmatter check.
+      # Why this job exists at all: when a skill does not conform, Agent Plugins
+      # §7.1 requires the client to SKIP it. Nothing errors, nothing warns — the
+      # plugin just quietly does less. That already happened here once (12 of 13
+      # skills were being silently dropped), so this is the one check worth the
+      # runner minutes.
       - name: Install skills-ref (official Agent Skills validator)
-        run: |
-          git clone --depth 1 https://github.com/agentskills/agentskills.git /tmp/agentskills
-          pip install --quiet /tmp/agentskills/skills-ref
+        run: pip install --quiet "git+https://github.com/agentskills/agentskills.git#subdirectory=skills-ref"
 
       - name: Validate every skill against the Agent Skills specification
         run: |
-          fail=0; n=0
+          fail=0
           for d in skills/*/; do
-            n=$((n+1))
             if skills-ref validate "$d" >/dev/null 2>&1; then
               echo "PASS  $d"
             else
@@ -59,9 +34,9 @@ jobs:
               fail=1
             fi
           done
-          echo "validated $n skills"
           exit $fail
 
-      # --- Normative requirements a schema cannot express --------------------
+      # Manifest schema rules + the normative requirements a schema cannot
+      # express. Pure stdlib, no network, no installs.
       - name: Check specification conformance
-        run: python .github/scripts/check_conformance.py
+        run: python3 .github/scripts/check_conformance.py

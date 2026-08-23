@@ -2,7 +2,7 @@
 
 PRs welcome. This repository is an [Agent Plugins 1.0.0](https://agent-plugins.org/specification) package,
 so the bar for a merge is: **both manifests still validate, and every skill still has valid frontmatter.**
-CI enforces exactly that on every push.
+CI enforces exactly that on every pull request.
 
 ## Before you open a PR
 

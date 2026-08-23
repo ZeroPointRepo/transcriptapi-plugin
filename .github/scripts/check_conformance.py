@@ -90,6 +90,29 @@ def check_manifest() -> dict:
     else:
         ok("5.2 manifest uses only the 10 permitted top-level fields")
 
+    # Field types. These mirror plugin.schema.json so this script is a complete
+    # substitute for running ajv against it, rather than a partial one.
+    for field in ("version", "description", "homepage", "repository", "license"):
+        if field in m and not isinstance(m[field], str):
+            bad(f"5.2 {field} MUST be a string")
+    if "keywords" in m:
+        if not isinstance(m["keywords"], list) or not all(
+            isinstance(k, str) for k in m["keywords"]
+        ):
+            bad("5.2 keywords MUST be an array of strings")
+    if "author" in m:
+        a = m["author"]
+        if not isinstance(a, dict):
+            bad("5.2 author MUST be an object")
+        else:
+            extra = set(a) - {"name", "email", "url"}
+            if extra:
+                bad(f"5.2 author permits only name/email/url; found {sorted(extra)}")
+            for k, v in a.items():
+                if not isinstance(v, str):
+                    bad(f"5.2 author.{k} MUST be a string")
+    ok("5.2 all manifest field types match the schema")
+
     if m.get("$schema") != PLUGIN_SCHEMA:
         bad(f"5.3 $schema MUST be {PLUGIN_SCHEMA}")
     else:
