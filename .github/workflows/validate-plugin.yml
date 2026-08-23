@@ -1,0 +1,47 @@
+name: Validate Agent Plugin
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate against Agent Plugins 1.0.0 schemas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch canonical schemas
+        run: |
+          curl -fsSL -o /tmp/plugin.schema.json https://agent-plugins.org/schemas/1.0.0/plugin.schema.json
+          curl -fsSL -o /tmp/mcp.schema.json    https://agent-plugins.org/schemas/1.0.0/mcp.schema.json
+
+      - name: Validate plugin.json
+        run: npx -y ajv-cli@5 validate --spec=draft2020 -s /tmp/plugin.schema.json -d plugin.json
+
+      - name: Validate mcp.json
+        run: npx -y ajv-cli@5 validate --spec=draft2020 -s /tmp/mcp.schema.json -d mcp.json
+
+      - name: Every skill has a SKILL.md with frontmatter
+        run: |
+          fail=0
+          for d in skills/*/; do
+            f="${d}SKILL.md"
+            if [ ! -f "$f" ]; then echo "::error::missing $f"; fail=1; continue; fi
+            head -1 "$f" | grep -q '^---$' || { echo "::error::$f missing YAML frontmatter"; fail=1; }
+          done
+          echo "checked $(ls -1d skills/*/ | wc -l) skills"
+          exit $fail
+
+      - name: No secrets committed
+        run: |
+          if grep -rIn --exclude-dir=.git -E 'sk_[A-Za-z0-9]{16,}' . ; then
+            echo "::error::possible API key committed"; exit 1
+          fi
+          echo "clean"

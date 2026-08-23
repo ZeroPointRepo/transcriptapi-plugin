@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "transcriptapi": {
+      "type": "http",
+      "url": "https://transcriptapi.com/mcp"
+    }
+  }
+}
