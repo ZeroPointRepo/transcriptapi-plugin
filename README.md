@@ -28,14 +28,14 @@
 
 ## 🧩 What is this?
 
-This repository root is a conformant **[Agent Plugins 1.0.0](https://agent-plugins.org/specification)** package — the open, vendor-neutral packaging standard published 2026-08-06 by Amazon, Cursor, GitHub, Microsoft, OpenAI and Vercel, with Google as a core maintainer. It bundles **MCP servers and Agent Skills** into one portable, drop-in folder that every compliant client can read.
+This repository root is a conformant **[Agent Plugins 1.0.0](https://agent-plugins.org/specification)** package: the open, vendor-neutral packaging standard published 2026-08-06 by Amazon, Cursor, GitHub, Microsoft, OpenAI and Vercel, with Google as a core maintainer. It bundles **MCP servers and Agent Skills** into one portable, drop-in folder that every compliant client can read.
 
 One install gives your agent both halves:
 
 | Component | What it does |
 |---|---|
-| **MCP server** (`transcriptapi`) | 6 hosted tools over streamable HTTP with OAuth 2.1 — `get_youtube_transcript`, `search_youtube`, `get_channel_latest_videos`, `search_channel_videos`, `list_channel_videos`, `list_playlist_videos`. No key handling: your agent signs you in on first use. |
-| **Skill** (`youtube`) | Teaches the agent *when* to reach for YouTube data, which tool answers each question, and how not to burn credits — with a full REST fallback for clients that load skills but not MCP servers. |
+| **MCP server** (`transcriptapi`) | 6 hosted tools over streamable HTTP with OAuth 2.1: `get_youtube_transcript`, `search_youtube`, `get_channel_latest_videos`, `search_channel_videos`, `list_channel_videos`, `list_playlist_videos`. No key handling: your agent signs you in on first use. |
+| **Skill** (`youtube`) | Teaches the agent *when* to reach for YouTube data, which tool answers each question, and how not to burn credits, with a full REST fallback for clients that load skills but not MCP servers. |
 
 **Just ask, in plain English:**
 
@@ -45,13 +45,13 @@ Find Andrew Huberman's three most-viewed videos about sleep and compare them.
 What has @TED posted in the last month?
 ```
 
-That last set of prompts touches 3 of the 6 tools — `search_youtube`, `search_channel_videos`, `get_youtube_transcript` — without you writing a line of code.
+That last set of prompts touches 3 of the 6 tools (`search_youtube`, `search_channel_videos`, `get_youtube_transcript`) without you writing a line of code.
 
 ---
 
 ## Why TranscriptAPI
 
-Most YouTube integrations do one thing — pull a single transcript. **This is a full toolkit.**
+Most YouTube integrations do one thing: pull a single transcript. **This is a full toolkit.**
 
 |                                          | TranscriptAPI | Typical YouTube MCP / skill |
 | ---------------------------------------- | ----------------- | ------------------- |
@@ -73,7 +73,7 @@ Most YouTube integrations do one thing — pull a single transcript. **This is a
 
 ### As an Agent Plugin <sub>· **recommended**</sub>
 
-Agent Plugins 1.0.0 standardizes the *package format*, not installation — so each client owns its own install flow. Point any of them at this repository:
+Agent Plugins 1.0.0 standardizes the *package format*, not installation, so each client owns its own install flow. Point any of them at this repository:
 
 ```txt
 https://github.com/ZeroPointRepo/transcriptapi-plugin
@@ -162,7 +162,7 @@ cp -r transcriptapi-plugin/skills/youtube ~/.claude/skills/
 > I want YouTube transcripts, search and channel browsing from my agent. Set it up for me.
 > ```
 
-> **Tip — auto-invoke.** Add this rule to your client so you never have to ask explicitly:
+> **Tip: auto-invoke.** Add this rule to your client so you never have to ask explicitly:
 >
 > ```txt
 > When I share a YouTube URL, automatically use TranscriptAPI to fetch the transcript
@@ -175,21 +175,21 @@ cp -r transcriptapi-plugin/skills/youtube ~/.claude/skills/
 
 The MCP endpoint is `https://transcriptapi.com/mcp`. Get an API key from your [dashboard](https://transcriptapi.com/dashboard/api-keys) if your client doesn't do OAuth.
 
-One-click, if you'd rather skip the config — note these add the **MCP server only**, not the bundled skill:
+One-click, if you'd rather skip the config. Note these add the **MCP server only**, not the bundled skill:
 
 <a href="https://cursor.com/en/install-mcp?name=transcript-api&config=eyJ1cmwiOiJodHRwczovL3RyYW5zY3JpcHRhcGkuY29tL21jcCJ9"><img alt="Add to Cursor" src="https://img.shields.io/badge/Cursor-Add_MCP-000000?style=flat-square&logo=cursor&logoColor=white"/></a>
 <a href="https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22transcript-api%22%2C%22url%22%3A%22https%3A%2F%2Ftranscriptapi.com%2Fmcp%22%7D"><img alt="Add to VS Code" src="https://img.shields.io/badge/VS_Code-Add_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white"/></a>
 
-**Claude Desktop & Web** — Settings → **Connectors** → **Add custom connector** → name `TranscriptAPI`, URL `https://transcriptapi.com/mcp` → **Connect**. [Full guide →](https://transcriptapi.com/docs/mcp/claude)
+**Claude Desktop & Web**: Settings → **Connectors** → **Add custom connector** → name `TranscriptAPI`, URL `https://transcriptapi.com/mcp` → **Connect**. [Full guide →](https://transcriptapi.com/docs/mcp/claude)
 
 **Claude Code (CLI)**
 ```sh
 claude mcp add --transport http transcript-api https://transcriptapi.com/mcp
 ```
 
-**ChatGPT** — enable Developer Mode, then `Settings` → `Connected Apps` → `Add` → URL `https://transcriptapi.com/mcp`. Leave Client ID/Secret blank for Dynamic Client Registration. [Full guide →](https://transcriptapi.com/docs/mcp/chatgpt)
+**ChatGPT**: enable Developer Mode, then `Settings` → `Connected Apps` → `Add` → URL `https://transcriptapi.com/mcp`. Leave Client ID/Secret blank for Dynamic Client Registration. [Full guide →](https://transcriptapi.com/docs/mcp/chatgpt)
 
-**OpenAI Agent Builder** — add an MCP Server tool, URL `https://transcriptapi.com/mcp`, auth **API Key**. [Guide →](https://transcriptapi.com/docs/mcp/openai-agent-builder)
+**OpenAI Agent Builder**: add an MCP Server tool, URL `https://transcriptapi.com/mcp`, auth **API Key**. [Guide →](https://transcriptapi.com/docs/mcp/openai-agent-builder)
 
 **Amp**
 ```sh
@@ -270,7 +270,7 @@ All six are exposed automatically once you connect. **1 credit = 1 successful (H
 
 ### 1. `get_youtube_transcript`
 
-Fetch the transcript for any YouTube video — as markdown (with metadata) or structured JSON.
+Fetch the transcript for any YouTube video, as markdown (with metadata) or structured JSON.
 
 | Parameter           | Type    | Default      | Description                                    |
 | ------------------- | ------- | ------------ | ---------------------------------------------- |
@@ -324,7 +324,7 @@ Search YouTube for videos or channels. Filter by type and paginate with a contin
 
 ### 3. `get_channel_latest_videos` <sub>· **FREE**</sub>
 
-The ~15 most recent uploads from any channel via RSS — no credits. Perfect for monitoring, daily recaps, or triggering downstream pipelines.
+The ~15 most recent uploads from any channel via RSS. No credits. Perfect for monitoring, daily recaps, or triggering downstream pipelines.
 
 | Parameter | Type   | Default      | Description                                  |
 | --------- | ------ | ------------ | -------------------------------------------- |
@@ -370,7 +370,7 @@ Every video in a YouTube playlist (PL/UU/LL/FL/OL IDs supported). Process entire
 
 ## 🎯 The `youtube` skill
 
-One skill covers everything. It teaches the agent *when* YouTube is the right source, which tool answers each kind of question, and how not to burn credits — the judgement the MCP tool definitions can't carry on their own.
+One skill covers everything. It teaches the agent *when* YouTube is the right source, which tool answers each kind of question, and how not to burn credits: the judgement the MCP tool definitions can't carry on their own.
 
 It handles both data paths automatically:
 
@@ -384,7 +384,7 @@ skills/youtube/
 ├── SKILL.md                    # routing, credit discipline, workflows (~130 lines)
 └── references/
     ├── mcp-tools.md            # full parameter reference for the 6 tools
-    ├── rest-api.md             # REST fallback — endpoints, curl, validation rules
+    ├── rest-api.md             # REST fallback: endpoints, curl, validation rules
     ├── auth-setup.md           # getting and persisting an API key
     └── errors.md               # error codes, retry policy, false alarms
 ```
@@ -417,14 +417,14 @@ Only `name` + `description` (~100 tokens) load at startup. The body loads when t
 
 ### OAuth 2.1 <sub>· recommended</sub>
 
-- **Dynamic Client Registration (DCR)** — Claude Desktop, Claude Web, ChatGPT and every Agent Plugins client. Just add the plugin; the client auto-registers and you authorize once via browser redirect. No key to copy.
-- **Static registration** — optional on ChatGPT. Get Client ID + Secret from the [MCP Integration Dashboard](https://transcriptapi.com/dashboard/mcp-integration).
+- **Dynamic Client Registration (DCR)**: Claude Desktop, Claude Web, ChatGPT and every Agent Plugins client. Just add the plugin; the client auto-registers and you authorize once via browser redirect. No key to copy.
+- **Static registration**: optional on ChatGPT. Get Client ID + Secret from the [MCP Integration Dashboard](https://transcriptapi.com/dashboard/mcp-integration).
 
 ### API key
 
 Universal fallback, and what the REST skills use.
 
-1. Get your key from your [dashboard](https://transcriptapi.com/dashboard/api-keys) — keys start with `sk_`
+1. Get your key from your [dashboard](https://transcriptapi.com/dashboard/api-keys). Keys start with `sk_`
 2. Send it as a Bearer token: `"Authorization": "Bearer sk_your_api_key_here"`
 
 For skills, export it once:
@@ -475,13 +475,13 @@ export TRANSCRIPT_API_KEY="sk_your_key_here"
 | `402 Payment Required` | Out of credits | Check your balance at [transcriptapi.com/billing](https://transcriptapi.com/billing) |
 | `403` (Cloudflare `1010`) | Request sent without a User-Agent header | Send your agent's name as the User-Agent, e.g. `HermesAgent/0.11.0` |
 | `404 Not Found` | Video has no captions, is private, age-restricted or region-locked | Verify the URL opens in a browser and the player shows captions |
-| `408 Request Timeout` | Temporary upstream pressure | Transient — retry once after ~2s |
+| `408 Request Timeout` | Temporary upstream pressure | Transient: retry once after ~2s |
 | `422 Validation Error` | Malformed channel or playlist reference | Channels accept `@handle`, a channel URL, or a `UC` ID; playlists accept `PL`, `UU`, `LL`, `FL`, `OL` |
 | `429 Too Many Requests` | Rate limit reached | Wait and respect the `Retry-After` header |
 
 Three more worth knowing:
 
-- **Key saved but the agent can't see it.** Shell config files load per shell type — check the table above and make sure the file matches the shell your agent actually runs in. Restarting the agent after saving resolves most cases.
+- **Key saved but the agent can't see it.** Shell config files load per shell type. Check the table above and make sure the file matches the shell your agent actually runs in. Restarting the agent after saving resolves most cases.
 - **Live streams and premieres.** Transcripts appear after the stream ends and captions are processed, not while live.
 - **Unexpected transcript language.** Many videos only carry captions in their original language. Request a preferred language, or ask your agent to translate the result.
 
@@ -501,7 +501,7 @@ Three more worth knowing:
 ```
 transcriptapi-plugin/
 ├── plugin.json                 # Agent Plugins 1.0.0 manifest (canonical $schema)
-├── mcp.json                    # hosted MCP server — streamable-http, OAuth, no keys
+├── mcp.json                    # hosted MCP server: streamable-http, OAuth, no keys
 ├── skills/
 │   └── youtube/                # one skill: SKILL.md + references/ (progressive disclosure)
 ├── assets/                     # black-background brand marks (SVG + PNG 64→1024)
@@ -509,7 +509,7 @@ transcriptapi-plugin/
 ├── smithery.yaml · glama.json  # directory listings
 ├── marketplace.json            # marketplace index (single-plugin)
 ├── .claude-plugin/ .cursor-plugin/ .codex-plugin/ .plugin/
-│                               # per-client discovery paths — same metadata, one per client
+│                               # per-client discovery paths: same metadata, one per client
 └── .github/workflows/          # CI: validates both manifests against the canonical schemas
 ```
 
@@ -519,7 +519,7 @@ The canonical package is `plugin.json` + `skills/` + `mcp.json`. Everything else
 
 ## ✅ Verify this package
 
-No secrets, no executable code, no `stdio` servers — nothing here runs on your machine. Check it yourself.
+No secrets, no executable code, no `stdio` servers: nothing here runs on your machine. Check it yourself.
 
 **1. Manifests against the canonical schemas:**
 
@@ -539,13 +539,13 @@ for d in skills/*/; do skills-ref validate "$d"; done
 
 It prints `Valid skill`.
 
-**3. The normative requirements a schema can't express** — path safety, discovery depth, reverse-domain extension namespaces, transport rules:
+**3. The normative requirements a schema can't express**: path safety, discovery depth, reverse-domain extension namespaces, transport rules:
 
 ```bash
 python .github/scripts/check_conformance.py
 ```
 
-CI runs the skill validation and the conformance checker on every pull request. The `ajv` step above is the canonical schema check — `check_conformance.py` enforces the same rules plus the ones a schema can't express, so running it locally is equivalent. See [SECURITY.md](SECURITY.md).
+CI runs the skill validation and the conformance checker on every pull request. The `ajv` step above is the canonical schema check. `check_conformance.py` enforces the same rules plus the ones a schema can't express, so running it locally is equivalent. See [SECURITY.md](SECURITY.md).
 
 ---
 
@@ -591,7 +591,7 @@ com.transcriptapi/youtube-transcript-and-youtube-search
 
 ## Contributing
 
-PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+PRs welcome: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Disclosure
 
