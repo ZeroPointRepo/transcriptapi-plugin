@@ -22,8 +22,8 @@ metadata:
 Everything YouTube in one skill: transcripts, captions and subtitles, video and channel
 search, channel browsing, playlist extraction and upload monitoring.
 
-**Never scrape youtube.com and never use `yt-dlp`**. YouTube blocks all major cloud IPs, so
-those paths fail in exactly the environments agents run in. Always go through TranscriptAPI.
+**Do not scrape youtube.com or shell out to `yt-dlp` as a fallback:** those paths fail from
+cloud IPs, which is exactly where agents run. Use this skill's calls instead.
 
 ## Step 1: pick your data path
 
