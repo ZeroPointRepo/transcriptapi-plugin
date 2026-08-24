@@ -10,7 +10,7 @@
 
 <p align="center">
   <b>The complete YouTube toolkit as a single Agent Plugin, by <a href="https://transcriptapi.com">TranscriptAPI</a>.</b><br/>
-  YouTube transcripts, captions and subtitles, video &amp; channel search, channel browsing, playlist extraction and new-upload polling — 6 hosted MCP tools plus one comprehensive skill.<br/>
+  YouTube transcripts, captions and subtitles, video &amp; channel search, channel browsing, playlist extraction and new-upload polling: 6 hosted MCP tools plus one comprehensive skill.<br/>
   One install. OAuth sign-in. No API key to manage. Free tier, no card.
 </p>
 
