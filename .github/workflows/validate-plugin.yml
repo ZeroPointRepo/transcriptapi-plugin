@@ -1,7 +1,7 @@
 name: Validate Agent Plugin
 
 # Runs on pull requests only. This repository is static JSON and markdown that
-# changes rarely, and every change lands through a PR — so validating on both
+# changes rarely, and every change lands through a PR, so validating on both
 # push and PR just ran the same checks twice.
 on:
   pull_request:
@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # Why this job exists at all: when a skill does not conform, Agent Plugins
-      # §7.1 requires the client to SKIP it. Nothing errors, nothing warns — the
+      # §7.1 requires the client to SKIP it. Nothing errors, nothing warns: the
       # plugin just quietly does less. That already happened here once (12 of 13
       # skills were being silently dropped), so this is the one check worth the
       # runner minutes.

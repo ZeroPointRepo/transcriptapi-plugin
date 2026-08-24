@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "transcriptapi",
   "version": "1.2.0",
-  "description": "YouTube MCP + YouTube Skill for AI agents — YouTube transcripts, captions, subtitles, video and channel search, channel browsing and playlist extraction. 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
+  "description": "YouTube MCP + YouTube Skill for AI agents: YouTube transcripts, captions, subtitles, video and channel search, channel browsing and playlist extraction. 6 hosted MCP tools plus one comprehensive skill, powered by TranscriptAPI. OAuth sign-in, free tier, no API key to manage.",
   "author": {
     "name": "TranscriptAPI",
     "email": "hello@transcriptapi.com",

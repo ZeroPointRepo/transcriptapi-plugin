@@ -8,9 +8,9 @@ tool. 1 credit = 1 successful call; failures and rate limits are never charged.
 
 ---
 
-## `get_youtube_transcript` — 1 credit
+## `get_youtube_transcript`: 1 credit
 
-Fetch the spoken content of a video. This is also the captions/subtitles path — same data.
+Fetch the spoken content of a video. This is also the captions/subtitles path: same data.
 
 | Parameter | Type | Default | Notes |
 | --- | --- | --- | --- |
@@ -57,21 +57,21 @@ moment. `"text"` is cheaper to reason over.
 
 ---
 
-## `search_youtube` — 1 credit per page
+## `search_youtube`: 1 credit per page
 
 Search YouTube for videos or channels. ~20 results per page.
 
 | Parameter | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `query` | string | **required** | 1–200 characters |
+| `query` | string | **required** | 1-200 characters |
 | `search_type` | string | `"video"` | `"video"` or `"channel"` |
 | `continuation` | string | `null` | Token from a prior call, for the next page |
 
-Returns metadata only — no transcripts. Pick the best hits, then transcribe those.
+Returns metadata only, no transcripts. Pick the best hits, then transcribe those.
 
 ---
 
-## `get_channel_latest_videos` — FREE
+## `get_channel_latest_videos`: FREE
 
 The ~15 most recent uploads from a channel, via RSS.
 
@@ -84,7 +84,7 @@ Returns exact view counts and ISO publish timestamps.
 
 ---
 
-## `search_channel_videos` — 1 credit per page
+## `search_channel_videos`: 1 credit per page
 
 Search within a single channel. ~30 results per page.
 
@@ -98,7 +98,7 @@ Always better than listing a whole channel and filtering client-side.
 
 ---
 
-## `list_channel_videos` — 1 credit per page
+## `list_channel_videos`: 1 credit per page
 
 A channel's full upload history, ~100 per page.
 
@@ -112,13 +112,13 @@ Only when the user genuinely wants the whole catalogue. For recent uploads use
 
 ---
 
-## `list_playlist_videos` — 1 credit per page
+## `list_playlist_videos`: 1 credit per page
 
 Every video in a playlist, ~100 per page.
 
 | Parameter | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `playlist` | string | **required** | Playlist URL or ID — `PL`, `UU`, `LL`, `FL`, `OL` prefixes |
+| `playlist` | string | **required** | Playlist URL or ID: `PL`, `UU`, `LL`, `FL`, `OL` prefixes |
 | `continuation` | string | `null` | Pagination token |
 
-Confirm before transcribing a large playlist — that is one credit per video.
+Confirm before transcribing a large playlist: that is one credit per video.

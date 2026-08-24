@@ -1,4 +1,4 @@
-# REST API reference — fallback path
+# REST API reference: fallback path
 
 Use this only when the `transcriptapi` MCP tools are **not** available. Same backend, same
 credit costs.
@@ -11,7 +11,7 @@ Live OpenAPI spec: <https://transcriptapi.com/openapi.json>
 | Header | Value |
 | --- | --- |
 | `Authorization` | `Bearer $TRANSCRIPT_API_KEY` |
-| `User-Agent` | Your agent's name, optionally with a version — e.g. `HermesAgent/0.11.0`, `ClaudeCode/1.0` |
+| `User-Agent` | Your agent's name, optionally with a version, e.g. `HermesAgent/0.11.0`, `ClaudeCode/1.0` |
 
 > **Do not omit `User-Agent` or send a bare default.** Cloudflare returns a 403 with error
 > code 1010 and blocks the request. Agent name alone is fine; the version is optional.
@@ -20,7 +20,7 @@ If `$TRANSCRIPT_API_KEY` is not set, follow [auth-setup.md](auth-setup.md).
 
 ---
 
-## Transcript — 1 credit
+## Transcript: 1 credit
 
 ```http
 GET /youtube/transcript?video_url=VIDEO_URL&format=text&include_timestamp=true&send_metadata=true
@@ -28,7 +28,7 @@ GET /youtube/transcript?video_url=VIDEO_URL&format=text&include_timestamp=true&s
 
 | Param | Required | Default | Values |
 | --- | --- | --- | --- |
-| `video_url` | yes | — | YouTube URL or 11-character video ID |
+| `video_url` | yes | - | YouTube URL or 11-character video ID |
 | `format` | no | `json` | `json`, `text` |
 | `include_timestamp` | no | `true` | `true`, `false` |
 | `send_metadata` | no | `false` | `true`, `false` |
@@ -56,7 +56,7 @@ curl -sG https://transcriptapi.com/api/v2/youtube/transcript \
 
 ---
 
-## Search — 1 credit
+## Search: 1 credit
 
 ```http
 GET /youtube/search?q=QUERY&type=video&limit=20
@@ -64,9 +64,9 @@ GET /youtube/search?q=QUERY&type=video&limit=20
 
 | Param | Required | Default | Validation |
 | --- | --- | --- | --- |
-| `q` | yes | — | 1–200 characters |
+| `q` | yes | - | 1-200 characters |
 | `type` | no | `video` | `video`, `channel` |
-| `limit` | no | `20` | 1–50 |
+| `limit` | no | `20` | 1-50 |
 
 ---
 
@@ -75,7 +75,7 @@ GET /youtube/search?q=QUERY&type=video&limit=20
 Every channel endpoint accepts `channel` as an `@handle`, a channel URL, or a `UC…` ID. There
 is no need to resolve first.
 
-### Resolve a handle — FREE
+### Resolve a handle: FREE
 
 ```http
 GET /youtube/channel/resolve?input=@TED
@@ -85,7 +85,7 @@ GET /youtube/channel/resolve?input=@TED
 { "channel_id": "UC...", "resolved_from": "@TED" }
 ```
 
-### Latest ~15 videos — FREE
+### Latest ~15 videos: FREE
 
 ```http
 GET /youtube/channel/latest?channel=@TED
@@ -93,7 +93,7 @@ GET /youtube/channel/latest?channel=@TED
 
 Returns exact `viewCount` and ISO `published` timestamps.
 
-### All channel videos — 1 credit per page
+### All channel videos: 1 credit per page
 
 ```http
 GET /youtube/channel/videos?channel=@NASA          # first page, ~100 videos
@@ -103,7 +103,7 @@ GET /youtube/channel/videos?continuation=TOKEN     # subsequent pages
 Provide **exactly one** of `channel` or `continuation`. The response carries
 `continuation_token` and `has_more`.
 
-### Search within a channel — 1 credit
+### Search within a channel: 1 credit
 
 ```http
 GET /youtube/channel/search?channel=@TED&q=QUERY&limit=30
@@ -111,7 +111,7 @@ GET /youtube/channel/search?channel=@TED&q=QUERY&limit=30
 
 ---
 
-## Playlists — 1 credit per page
+## Playlists: 1 credit per page
 
 ```http
 GET /youtube/playlist/videos?playlist=PL_ID        # first page
@@ -142,10 +142,10 @@ Valid ID prefixes: `PL`, `UU`, `LL`, `FL`, `OL`. Response includes `playlist_inf
 | `video_url` | YouTube URL (full, `youtu.be`, or shorts) or 11-character ID |
 | `channel` | `@handle`, channel URL, or `UC…` ID |
 | `playlist` | Playlist URL or ID with a `PL`/`UU`/`LL`/`FL`/`OL` prefix |
-| `q` | 1–200 characters |
-| `limit` | 1–50 |
+| `q` | 1-200 characters |
+| `limit` | 1-50 |
 
-## Worked example — research workflow
+## Worked example: research workflow
 
 ```bash
 # 1. find candidates

@@ -2,13 +2,13 @@
 # https://smithery.ai
 #
 # This MCP is a remote server hosted at https://transcriptapi.com/mcp.
-# Smithery users can connect directly to the remote endpoint — no local install required.
+# Smithery users can connect directly to the remote endpoint. No local install required.
 
 startCommand:
   type: http
   url: https://transcriptapi.com/mcp
   description: >-
-    YouTube transcripts + YouTube search MCP for AI agents. Six tools — transcript
+    YouTube transcripts + YouTube search MCP for AI agents. Six tools: transcript
     extraction, video search, channel search, channel browsing, playlist
     extraction, and new-upload polling. Production-scale (15M+ requests/month,
     49ms median). Authenticate via OAuth (Dynamic Client Registration) or API key.

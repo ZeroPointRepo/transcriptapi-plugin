@@ -1,6 +1,6 @@
 ---
 name: youtube
-description: "Complete YouTube toolkit — transcripts, captions and subtitles, video and channel search, channel browsing, within-channel search, playlist extraction and new-upload monitoring, powered by TranscriptAPI. Use whenever YouTube is or could be relevant, even if not explicitly mentioned: pasted video, channel or playlist links, bare 11-character video IDs, @handles, creator names, or requests to summarize, quote, transcribe, translate, fact-check or analyse a video. Also use for topic research where talks, lectures, tutorials, reviews, conference sessions or product announcements are the better source, and for tracking what a creator has posted recently. Not for uploading videos, posting comments, or managing a YouTube account."
+description: "Complete YouTube toolkit: transcripts, captions and subtitles, video and channel search, channel browsing, within-channel search, playlist extraction and new-upload monitoring, powered by TranscriptAPI. Use whenever YouTube is or could be relevant, even if not explicitly mentioned: pasted video, channel or playlist links, bare 11-character video IDs, @handles, creator names, or requests to summarize, quote, transcribe, translate, fact-check or analyse a video. Also use for topic research where talks, lectures, tutorials, reviews, conference sessions or product announcements are the better source, and for tracking what a creator has posted recently. Not for uploading videos, posting comments, or managing a YouTube account."
 license: MIT
 compatibility: "Requires network access to transcriptapi.com. No runtimes, binaries or system packages needed. Works with the bundled MCP server (OAuth, no key) or with a TRANSCRIPT_API_KEY over plain HTTPS."
 metadata:
@@ -22,44 +22,44 @@ metadata:
 Everything YouTube in one skill: transcripts, captions and subtitles, video and channel
 search, channel browsing, playlist extraction and upload monitoring.
 
-**Never scrape youtube.com and never use `yt-dlp`** — YouTube blocks all major cloud IPs, so
+**Never scrape youtube.com and never use `yt-dlp`**. YouTube blocks all major cloud IPs, so
 those paths fail in exactly the environments agents run in. Always go through TranscriptAPI.
 
-## Step 1 — pick your data path
+## Step 1: pick your data path
 
 This skill ships alongside a hosted MCP server, but a client may load the skill without it.
 Check once, at the start of the first YouTube task:
 
 | Condition | Path | Auth |
 | --- | --- | --- |
-| Tools named `get_youtube_transcript`, `search_youtube`, … are available | **MCP** *(preferred)* | OAuth — automatic. First call prompts sign-in. No key to configure. |
+| Tools named `get_youtube_transcript`, `search_youtube`, … are available | **MCP** *(preferred)* | OAuth: automatic. First call prompts sign-in. No key to configure. |
 | No such tools | **REST** | `Authorization: Bearer $TRANSCRIPT_API_KEY` + a real `User-Agent` |
 
 Both paths hit the same backend and cost the same. Prefer MCP: no key handling, and the
 client manages authorization.
 
 If the MCP tools error with an auth failure, tell the user to complete the sign-in prompt in
-their client or re-enable the `transcriptapi` MCP server — do **not** silently fall back to
+their client or re-enable the `transcriptapi` MCP server. Do **not** silently fall back to
 REST, and do not ask for an API key.
 
 If you are on the REST path and `$TRANSCRIPT_API_KEY` is unset, read
 [references/auth-setup.md](references/auth-setup.md) and follow it. Free account, 100
 credits, no card.
 
-## Step 2 — route the request
+## Step 2: route the request
 
 | The user wants | MCP tool | REST endpoint | Cost |
 | --- | --- | --- | --- |
-| What a video says — summarize, quote, transcribe, translate, fact-check | `get_youtube_transcript` | `GET /youtube/transcript` | 1 |
+| What a video says: summarize, quote, transcribe, translate, fact-check | `get_youtube_transcript` | `GET /youtube/transcript` | 1 |
 | Captions or subtitles for a video *(same data as a transcript)* | `get_youtube_transcript` | `GET /youtube/transcript` | 1 |
 | Find videos or channels on a topic | `search_youtube` | `GET /youtube/search` | 1 / page |
 | What a creator posted recently | `get_channel_latest_videos` | `GET /youtube/channel/latest` | **free** |
 | Find something inside one channel | `search_channel_videos` | `GET /youtube/channel/search` | 1 / page |
 | A channel's entire upload history | `list_channel_videos` | `GET /youtube/channel/videos` | 1 / page |
 | Every video in a playlist, course or series | `list_playlist_videos` | `GET /youtube/playlist/videos` | 1 / page |
-| Resolve an `@handle` to a `UC…` ID | *(not needed — pass the handle)* | `GET /youtube/channel/resolve` | **free** |
+| Resolve an `@handle` to a `UC…` ID | *(not needed, pass the handle)* | `GET /youtube/channel/resolve` | **free** |
 
-Channel arguments accept an `@handle`, a channel URL, or a `UC…` ID interchangeably — never
+Channel arguments accept an `@handle`, a channel URL, or a `UC…` ID interchangeably. Never
 resolve first. Video arguments accept a full URL, a `youtu.be` short URL, a shorts URL, or a
 bare 11-character ID.
 
@@ -69,7 +69,7 @@ Full parameters, defaults and response shapes:
 
 ### Use this skill when
 
-- A YouTube link, video ID, `@handle` or playlist URL appears — even in passing, if the user
+- A YouTube link, video ID, `@handle` or playlist URL appears, even in passing, if the user
   is clearly asking about its content
 - The user asks what a video says, without using the word "transcript"
 - The user names a creator and wants to explore or monitor their content
@@ -78,42 +78,42 @@ Full parameters, defaults and response shapes:
 
 ### Don't use this skill when
 
-- A YouTube link is incidental — an email signature, an unrelated citation
+- A YouTube link is incidental: an email signature, an unrelated citation
 - The user is discussing YouTube as a platform or company, not asking about content
-- The user wants to upload, comment, or manage an account — this skill is **read-only**
+- The user wants to upload, comment, or manage an account: this skill is **read-only**
 
-## Step 3 — spend credits carefully
+## Step 3: spend credits carefully
 
 1 credit = 1 successful (HTTP 200) request. Failed and rate-limited calls are never charged.
 
 - **`get_channel_latest_videos` is free.** Reach for it first for anything about recent
   uploads. Use `list_channel_videos` only when the user genuinely wants the whole catalogue.
 - **Search, then transcribe selectively.** Transcribing a whole page of search results is the
-  single most common way to waste credits. Pick the best 2–3 hits and pull those.
+  single most common way to waste credits. Pick the best 2-3 hits and pull those.
 - **Search inside a channel** with `search_channel_videos` rather than listing every video and
   filtering yourself.
 - **Paginate only while the user still needs more.** Stop when the question is answered.
 - **Ask for `format=text`, don't assume it.** Markdown text is cheaper to reason over than
-  per-segment JSON, and it *is* the MCP default — but the **REST default is `json`**, and
+  per-segment JSON, and it *is* the MCP default, but the **REST default is `json`**, and
   REST also defaults `send_metadata` to `false`. On the REST path pass
   `format=text&include_timestamp=true&send_metadata=true` explicitly. Use `json` only when
   you need exact per-segment timestamps to cite or seek.
 
 ## Common workflows
 
-**Summarize a video** — `get_youtube_transcript` on the URL, then summarize. For a long video,
+**Summarize a video**: `get_youtube_transcript` on the URL, then summarize. For a long video,
 lead with the key points and offer the full transcript rather than dumping it.
 
-**Research a topic** — `search_youtube` → pick the 2–3 most relevant or most-viewed →
+**Research a topic**: `search_youtube` → pick the 2-3 most relevant or most-viewed →
 transcript each → synthesize with attribution to video titles.
 
-**Monitor a creator** — `get_channel_latest_videos` (free) → report new uploads → transcribe
+**Monitor a creator**: `get_channel_latest_videos` (free) → report new uploads → transcribe
 only the ones the user picks.
 
-**Work through a course or series** — `list_playlist_videos` → transcript per video, in order.
+**Work through a course or series**: `list_playlist_videos` → transcript per video, in order.
 Confirm before starting if the playlist is large; that is one credit per video.
 
-**Competitor or topic scan inside a channel** — `search_channel_videos` → transcripts of the
+**Competitor or topic scan inside a channel**: `search_channel_videos` → transcripts of the
 top hits.
 
 ## When something fails
@@ -121,7 +121,7 @@ top hits.
 Error codes, what they mean and how to recover: [references/errors.md](references/errors.md).
 
 The two that bite most often: a **403 with Cloudflare code 1010** on the REST path means you
-sent no `User-Agent` — set it to your agent's name. A **404** usually means the video has no
+sent no `User-Agent`. Set it to your agent's name. A **404** usually means the video has no
 captions, is private, or is region-locked; verify the URL opens in a browser and shows
 captions there.
 
