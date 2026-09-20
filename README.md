@@ -21,7 +21,7 @@
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-4CAF50?style=for-the-badge" alt="MIT License"/></a>
 </p>
 
-> **Powering 15M+ transcripts every month** - 500K+ transcripts processed daily - 49ms median response time
+> **Powering 15M+ transcripts every month** · 500K+ transcripts processed daily · 49ms median response time
 > Trusted in production by [youtubetotranscript.com](https://youtubetotranscript.com) (~11M/mo) and [recapio.com](https://recapio.com) (~2.8M/mo).
 
 ---
