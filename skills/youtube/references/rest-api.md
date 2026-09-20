@@ -40,7 +40,7 @@ otherwise.
 
 ```json
 {
-  "video_id": "dQw4w9WgXcQ",
+  "video_id": "UF8uR6Z6KLc",
   "language": "en",
   "transcript": [{ "text": "...", "start": 18.0, "duration": 3.5 }],
   "metadata": { "title": "...", "author_name": "...", "author_url": "..." }
@@ -49,7 +49,7 @@ otherwise.
 
 ```bash
 curl -sG https://transcriptapi.com/api/v2/youtube/transcript \
-  --data-urlencode "video_url=https://youtu.be/dQw4w9WgXcQ" \
+  --data-urlencode "video_url=https://youtu.be/UF8uR6Z6KLc" \
   -d format=text -d include_timestamp=true -d send_metadata=true \
   -H "Authorization: Bearer $TRANSCRIPT_API_KEY" \
   -H "User-Agent: YourAgent/1.0"
@@ -63,13 +63,13 @@ curl -sG https://transcriptapi.com/api/v2/youtube/transcript \
 GET /youtube/info?video_url=VIDEO_URL
 ```
 
-Basic metadata (title, author, thumbnail) plus the video's available transcript languages —
+Basic metadata (title, author, thumbnail) plus the video's available transcript languages:
 call this **before** `/youtube/transcript` to pick a language. No credit used (still requires
 an active plan). Returns `404` when the video does not exist or has no captions.
 
 ```json
 {
-  "video_id": "dQw4w9WgXcQ",
+  "video_id": "UF8uR6Z6KLc",
   "metadata": { "title": "...", "author_name": "...", "author_url": "...", "thumbnail_url": "..." },
   "available_languages": [
     { "code": "en", "name": "English" },
@@ -91,7 +91,7 @@ GET /youtube/video/metadata?video_url=VIDEO_URL&include=details,related
 ```
 
 > **Naming:** this endpoint was previously `/youtube/video/info`. That path still works as a
-> hidden, deprecated alias — always call `/youtube/video/metadata` in new code.
+> hidden, deprecated alias: always call `/youtube/video/metadata` in new code.
 
 Rich video metadata without needing captions: title, view/like-count text, publish date, a
 structured description with extracted links, an uploading-channel summary, and thumbnails.
@@ -108,7 +108,7 @@ of suggested videos. Hidden counts are `null`, never `0`. Cached 5 minutes.
 
 ```bash
 curl -sG https://transcriptapi.com/api/v2/youtube/video/metadata \
-  --data-urlencode "video_url=dQw4w9WgXcQ" -d include=details,related \
+  --data-urlencode "video_url=UF8uR6Z6KLc" -d include=details,related \
   -H "Authorization: Bearer $TRANSCRIPT_API_KEY" -H "User-Agent: YourAgent/1.0"
 ```
 
@@ -132,7 +132,7 @@ GET /youtube/search?continuation=TOKEN     # subsequent pages
 | `continuation` | conditional | - | Token from a prior call, for the next page |
 
 Provide exactly one of `q` or `continuation`. Filters (`sort`, `upload_date`, `duration`,
-`features`) apply to the first page only — the `continuation` token already encodes them.
+`features`) apply to the first page only: the `continuation` token already encodes them.
 ~20 results per page.
 
 ```bash
@@ -219,7 +219,7 @@ GET /youtube/channel/posts?channel=@TED
 GET /youtube/channel/posts?continuation=TOKEN
 ```
 
-Community (Posts tab) content — text, publish time, like-count text, and an `attachment`
+Community (Posts tab) content: text, publish time, like-count text, and an `attachment`
 (`image`, `multi_image`, `video`, `playlist`, or `poll`). Channels without a community tab
 return an empty `results` list (HTTP 200, not an error).
 
@@ -234,7 +234,7 @@ GET /youtube/channel/sections?channel=@TED&tab=featured
 | `channel` | yes | - | `@handle`, channel URL, or `UC…` ID |
 | `tab` | no | `featured` | `featured` (Home), `podcasts`, `releases` |
 
-The curated, grouped shelves of a channel page, in the channel's own order — each shelf holds
+The curated, grouped shelves of a channel page, in the channel's own order: each shelf holds
 videos, playlists, shorts, or featured channels. Not paginated. `podcasts`/`releases` return
 empty results on channels that don't have them.
 
@@ -270,7 +270,7 @@ Valid ID prefixes: `PL`, `UU`, `LL`, `FL`, `OL`. Response includes `playlist_inf
 | `/youtube/channel/sections` | 1 |
 | `/youtube/playlist/videos` | 1 / page |
 
-Only charged on successful (HTTP 200) responses; failed and rate-limited requests are free.
+Successful requests cost 1 credit unless stated otherwise above. Failed and rate-limited requests are free.
 Free endpoints still require an active plan with at least one credit available.
 
 ## Validation rules

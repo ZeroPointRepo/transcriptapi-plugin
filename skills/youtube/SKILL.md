@@ -90,7 +90,7 @@ Full parameters, defaults and response shapes:
 
 ## Step 3: spend credits carefully
 
-1 credit = 1 successful (HTTP 200) request. Failed and rate-limited calls are never charged.
+Successful calls cost 1 credit unless a tool states otherwise below. Failed and rate-limited calls are never charged.
 
 - **`get_channel_latest_videos` is free.** Reach for it first for anything about recent
   uploads. Use `list_channel_videos` only when the user genuinely wants the whole catalogue.

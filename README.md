@@ -10,7 +10,7 @@
 
 <p align="center">
   <b>The complete YouTube toolkit as a single Agent Plugin, by <a href="https://transcriptapi.com">TranscriptAPI</a>.</b><br/>
-  YouTube transcripts, video &amp; channel metadata, captions and subtitles, video &amp; channel search, channel browsing, playlist extraction and new-upload polling: 12 hosted MCP tools plus one comprehensive skill.<br/>
+  YouTube transcripts, video &amp; channel metadata, captions and subtitles, video &amp; channel search, channel browsing, playlist extraction and new-upload polling: 12 hosted MCP tools plus one skill.<br/>
   One install. OAuth sign-in. No API key to manage. Free tier, no card.
 </p>
 
@@ -40,8 +40,8 @@ One install gives your agent both halves:
 **Just ask, in plain English:**
 
 ```txt
-Summarize this video for me: https://youtu.be/dQw4w9WgXcQ
-Find Andrew Huberman's three most-viewed videos about sleep and compare them.
+Summarize this video for me: https://youtu.be/UF8uR6Z6KLc
+Find @NASA's three most-viewed videos about the Moon landing and compare them.
 What has @TED posted in the last month?
 ```
 
@@ -62,7 +62,7 @@ Most YouTube integrations do one thing: pull a single transcript. **This is a fu
 | Channel & playlist extraction            | ✅ Yes             | ❌ No |
 | Latest-uploads monitoring (free)         | ✅ Yes             | ❌ No |
 | OAuth 2.1 + API key auth                 | ✅ Both            | ❌ Usually neither |
-| Production scale (15M+ req/mo)           | ✅ Yes             | ❌ Hobbyist scrapers |
+| Production scale                         | ✅ Yes             | ❌ No |
 | Works on mobile Claude & web Claude      | ✅ Yes             | ❌ No |
 | Agent-friendly error messages            | ✅ Yes             | ❌ Bare HTTP codes |
 | No yt-dlp, no headless browser, no binaries | ✅ Just an API call | ❌ Blocked on cloud IPs |
@@ -266,7 +266,7 @@ amp mcp add transcript-api https://transcriptapi.com/mcp --header "Authorization
 
 ## 🛠️ The 12 MCP tools
 
-All 12 are exposed automatically once you connect. **1 credit = 1 successful (HTTP 200) request.** Failed and rate-limited calls do not consume credits.
+All 12 are exposed automatically once you connect. **Successful calls cost 1 credit unless a tool states otherwise below.** Failed and rate-limited calls do not consume credits.
 
 > **Which video tool?** Use `get_youtube_video_info` (free) to discover transcript languages before fetching a transcript. Use `get_video_metadata` (1 credit) for view/like counts, publish date, description, duration, tags, or related videos.
 
@@ -314,7 +314,7 @@ JSON:
 
 ### 2. `get_youtube_video_info` <sub>· **FREE**</sub>
 
-Basic metadata (title, author, thumbnail) plus the available transcript languages — call before `get_youtube_transcript` to pick a language.
+Basic metadata (title, author, thumbnail) plus the available transcript languages: call before `get_youtube_transcript` to pick a language.
 
 | Parameter   | Type   | Default      | Description                                     |
 | ----------- | ------ | ------------ | ------------------------------------------------ |
@@ -360,7 +360,7 @@ A channel's profile: title, `@handle`, verified flag, subscriber/video-count tex
 
 ### 6. `get_channel_latest_videos` <sub>· **FREE**</sub>
 
-The ~15 most recent uploads from any channel via RSS. No credits. Perfect for monitoring, daily recaps, or triggering downstream pipelines.
+The ~15 most recent uploads from any channel via RSS. Perfect for monitoring, daily recaps, or triggering downstream pipelines.
 
 | Parameter | Type   | Default      | Description                                  |
 | --------- | ------ | ------------ | -------------------------------------------- |
@@ -405,7 +405,7 @@ Paginated list of the playlists on a channel (id, title, URL, video-count text, 
 
 ### 10. `list_channel_posts`
 
-Paginated list of a channel's community (Posts tab) content — text, publish time, like-count text, and attachments. Channels without a community tab return an empty results list, not an error.
+Paginated list of a channel's community (Posts tab) content: text, publish time, like-count text, and attachments. Channels without a community tab return an empty results list, not an error.
 
 | Parameter      | Type   | Default | Description                          |
 | -------------- | ------ | ------- | ------------------------------------ |
@@ -416,7 +416,7 @@ Paginated list of a channel's community (Posts tab) content — text, publish ti
 
 ### 11. `get_channel_sections`
 
-The curated, grouped sections of a channel page — titled shelves of videos, playlists, shorts, or featured channels, in the channel's own order.
+The curated, grouped sections of a channel page: titled shelves of videos, playlists, shorts, or featured channels, in the channel's own order.
 
 | Parameter | Type   | Default      | Description                                                     |
 | --------- | ------ | ------------ | ---------------------------------------------------------------- |
