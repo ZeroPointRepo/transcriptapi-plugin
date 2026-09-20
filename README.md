@@ -475,9 +475,9 @@ Only `name` + `description` (~100 tokens) load at startup. The body loads when t
 | ⚖️ **Compare perspectives**    | "Compare arguments in these two videos: [URL1] [URL2]"                                          |
 | 🌐 **Translate**               | "Translate this video's transcript to Spanish: [URL]"                                           |
 | ✍️ **Repurpose content**        | "Turn this video into a 1,500-word blog post: [URL]"                                            |
-| 📡 **Monitor a creator**       | "Each morning, list new uploads from @hubermanlab and tell me which to watch."                  |
-| 🏛️ **Build a content database** | "Pull every video from @veritasium and store title + transcript."                              |
-| 🎯 **Competitor analysis**      | "Search inside @MKBHD for any video about [competitor product] and summarize the takeaways."   |
+| 📡 **Monitor a creator**       | "Each morning, list new uploads from @TED and tell me which to watch."                  |
+| 🏛️ **Build a content database** | "Pull every video from @NASA and store title + transcript."                              |
+| 🎯 **Competitor analysis**      | "Search inside @NASA for any video about [a specific mission or topic] and summarize the takeaways."   |
 
 ---
 
