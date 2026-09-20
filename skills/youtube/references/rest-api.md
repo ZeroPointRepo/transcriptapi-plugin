@@ -32,6 +32,7 @@ GET /youtube/transcript?video_url=VIDEO_URL&format=text&include_timestamp=true&s
 | `format` | no | `json` | `json`, `text` |
 | `include_timestamp` | no | `true` | `true`, `false` |
 | `send_metadata` | no | `false` | `true`, `false` |
+| `language` | no | - | Priority list of transcript language codes |
 
 Note the REST defaults differ from the MCP tool's: pass
 `format=text&include_timestamp=true&send_metadata=true` explicitly unless the user asked
@@ -39,7 +40,7 @@ otherwise.
 
 ```json
 {
-  "video_id": "dQw4w9WgXcQ",
+  "video_id": "UF8uR6Z6KLc",
   "language": "en",
   "transcript": [{ "text": "...", "start": 18.0, "duration": 3.5 }],
   "metadata": { "title": "...", "author_name": "...", "author_url": "..." }
@@ -48,7 +49,7 @@ otherwise.
 
 ```bash
 curl -sG https://transcriptapi.com/api/v2/youtube/transcript \
-  --data-urlencode "video_url=https://youtu.be/dQw4w9WgXcQ" \
+  --data-urlencode "video_url=https://youtu.be/UF8uR6Z6KLc" \
   -d format=text -d include_timestamp=true -d send_metadata=true \
   -H "Authorization: Bearer $TRANSCRIPT_API_KEY" \
   -H "User-Agent: YourAgent/1.0"
@@ -56,17 +57,89 @@ curl -sG https://transcriptapi.com/api/v2/youtube/transcript \
 
 ---
 
-## Search: 1 credit
+## Video info: FREE
 
 ```http
-GET /youtube/search?q=QUERY&type=video&limit=20
+GET /youtube/info?video_url=VIDEO_URL
 ```
 
-| Param | Required | Default | Validation |
+Basic metadata (title, author, thumbnail) plus the video's available transcript languages:
+call this **before** `/youtube/transcript` to pick a language. No credit used (still requires
+an active plan). Returns `404` when the video does not exist or has no captions.
+
+```json
+{
+  "video_id": "UF8uR6Z6KLc",
+  "metadata": { "title": "...", "author_name": "...", "author_url": "...", "thumbnail_url": "..." },
+  "available_languages": [
+    { "code": "en", "name": "English" },
+    { "code": "asr-en", "name": "English (auto-generated)" }
+  ]
+}
+```
+
+Each `available_languages[].code` can be passed to `/youtube/transcript`'s `language` param.
+For counts, publish date, description, duration, tags, or related videos, use
+`/youtube/video/metadata` instead.
+
+---
+
+## Video metadata: 1 credit
+
+```http
+GET /youtube/video/metadata?video_url=VIDEO_URL&include=details,related
+```
+
+> **Naming:** this endpoint was previously `/youtube/video/info`. That path still works as a
+> hidden, deprecated alias: always call `/youtube/video/metadata` in new code.
+
+Rich video metadata without needing captions: title, view/like-count text, publish date, a
+structured description with extracted links, an uploading-channel summary, and thumbnails.
+
+| Param | Required | Default | Values |
 | --- | --- | --- | --- |
-| `q` | yes | - | 1-200 characters |
-| `type` | no | `video` | `video`, `channel` |
-| `limit` | no | `20` | 1-50 |
+| `video_url` | yes | - | YouTube URL or 11-character video ID |
+| `include` | no | - | Comma-separated: `details`, `related` |
+
+`include=details` adds a `details` object (`lengthSeconds`, `category`, `tags`, caption-track
+inventory) sourced from YouTube's player endpoint; when it can't be read, `details.available`
+is `false` with a `reason` instead of a guessed value. `include=related` adds a `related` list
+of suggested videos. Hidden counts are `null`, never `0`. Cached 5 minutes.
+
+```bash
+curl -sG https://transcriptapi.com/api/v2/youtube/video/metadata \
+  --data-urlencode "video_url=UF8uR6Z6KLc" -d include=details,related \
+  -H "Authorization: Bearer $TRANSCRIPT_API_KEY" -H "User-Agent: YourAgent/1.0"
+```
+
+---
+
+## Search: 1 credit per page
+
+```http
+GET /youtube/search?q=QUERY&type=video
+GET /youtube/search?continuation=TOKEN     # subsequent pages
+```
+
+| Param | Required | Default | Values |
+| --- | --- | --- | --- |
+| `q` | conditional | - | 1-200 characters. Required for the first page. |
+| `type` | no | `video` | `video`, `channel`, `playlist`, `movie` (first page only) |
+| `sort` | no | `relevance` | `relevance`, `views` (first page only) |
+| `upload_date` | no | - | `hour`, `today`, `week`, `month`, `year` (first page, videos only) |
+| `duration` | no | - | `short` (under 4m), `medium` (4-20m), `long` (over 20m) (first page, videos only) |
+| `features` | no | - | Comma-separated: `hd`, `subtitles`, `cc`, `live`, `4k`, `hdr`, `360`, `creative_commons` (first page only) |
+| `continuation` | conditional | - | Token from a prior call, for the next page |
+
+Provide exactly one of `q` or `continuation`. Filters (`sort`, `upload_date`, `duration`,
+`features`) apply to the first page only: the `continuation` token already encodes them.
+~20 results per page.
+
+```bash
+curl -sG https://transcriptapi.com/api/v2/youtube/search \
+  --data-urlencode "q=machine learning explained" -d type=video -d sort=views -d duration=long \
+  -H "Authorization: Bearer $TRANSCRIPT_API_KEY" -H "User-Agent: YourAgent/1.0"
+```
 
 ---
 
@@ -85,6 +158,16 @@ GET /youtube/channel/resolve?input=@TED
 { "channel_id": "UC...", "resolved_from": "@TED" }
 ```
 
+### Channel info: 1 credit
+
+```http
+GET /youtube/channel/info?channel=@TED
+```
+
+Profile: title, `@handle`, verified flag, subscriber/video-count text, description, keywords,
+tags, thumbnails, banners, and `availableTabs`. Not paginated. Check `availableTabs` before
+calling `/youtube/channel/sections` or `/youtube/channel/videos` with a `tab`.
+
 ### Latest ~15 videos: FREE
 
 ```http
@@ -93,21 +176,67 @@ GET /youtube/channel/latest?channel=@TED
 
 Returns exact `viewCount` and ISO `published` timestamps.
 
-### All channel videos: 1 credit per page
+### Channel videos (paginated): 1 credit per page
 
 ```http
 GET /youtube/channel/videos?channel=@NASA          # first page, ~100 videos
+GET /youtube/channel/videos?channel=@NASA&tab=shorts
 GET /youtube/channel/videos?continuation=TOKEN     # subsequent pages
 ```
+
+| Param | Required | Default | Values |
+| --- | --- | --- | --- |
+| `channel` | conditional | - | first page only |
+| `tab` | no | `videos` | `videos` (uploads), `shorts`, `streams`. Repeat the same `tab` when paginating. |
+| `continuation` | conditional | - | subsequent pages |
 
 Provide **exactly one** of `channel` or `continuation`. The response carries
 `continuation_token` and `has_more`.
 
-### Search within a channel: 1 credit
+### Search within a channel: 1 credit per page
 
 ```http
-GET /youtube/channel/search?channel=@TED&q=QUERY&limit=30
+GET /youtube/channel/search?channel=@TED&q=QUERY
+GET /youtube/channel/search?continuation=TOKEN
 ```
+
+~30 results per page.
+
+### Channel playlists: 1 credit per page
+
+```http
+GET /youtube/channel/playlists?channel=@TED
+GET /youtube/channel/playlists?continuation=TOKEN
+```
+
+Returns id, title, URL, video-count text, thumbnails for each playlist. Pass a returned
+`playlistId` to `/youtube/playlist/videos` to list its videos.
+
+### Channel posts: 1 credit per page
+
+```http
+GET /youtube/channel/posts?channel=@TED
+GET /youtube/channel/posts?continuation=TOKEN
+```
+
+Community (Posts tab) content: text, publish time, like-count text, and an `attachment`
+(`image`, `multi_image`, `video`, `playlist`, or `poll`). Channels without a community tab
+return an empty `results` list (HTTP 200, not an error).
+
+### Channel sections: 1 credit
+
+```http
+GET /youtube/channel/sections?channel=@TED&tab=featured
+```
+
+| Param | Required | Default | Values |
+| --- | --- | --- | --- |
+| `channel` | yes | - | `@handle`, channel URL, or `UC…` ID |
+| `tab` | no | `featured` | `featured` (Home), `podcasts`, `releases` |
+
+The curated, grouped shelves of a channel page, in the channel's own order: each shelf holds
+videos, playlists, shorts, or featured channels. Not paginated. `podcasts`/`releases` return
+empty results on channels that don't have them.
 
 ---
 
@@ -119,7 +248,7 @@ GET /youtube/playlist/videos?continuation=TOKEN    # subsequent pages
 ```
 
 Valid ID prefixes: `PL`, `UU`, `LL`, `FL`, `OL`. Response includes `playlist_info`, `results`,
-`continuation_token` and `has_more`.
+`continuation_token` and `has_more`. ~100 results per page.
 
 ---
 
@@ -128,12 +257,21 @@ Valid ID prefixes: `PL`, `UU`, `LL`, `FL`, `OL`. Response includes `playlist_inf
 | Endpoint | Cost |
 | --- | --- |
 | `/youtube/transcript` | 1 |
-| `/youtube/search` | 1 |
+| `/youtube/info` | **free** |
+| `/youtube/video/metadata` | 1 |
+| `/youtube/search` | 1 / page |
 | `/youtube/channel/resolve` | **free** |
+| `/youtube/channel/info` | 1 |
 | `/youtube/channel/latest` | **free** |
 | `/youtube/channel/videos` | 1 / page |
-| `/youtube/channel/search` | 1 |
+| `/youtube/channel/search` | 1 / page |
+| `/youtube/channel/playlists` | 1 / page |
+| `/youtube/channel/posts` | 1 / page |
+| `/youtube/channel/sections` | 1 |
 | `/youtube/playlist/videos` | 1 / page |
+
+Successful requests cost 1 credit unless stated otherwise above. Failed and rate-limited requests are free.
+Free endpoints still require an active plan with at least one credit available.
 
 ## Validation rules
 
@@ -143,17 +281,24 @@ Valid ID prefixes: `PL`, `UU`, `LL`, `FL`, `OL`. Response includes `playlist_inf
 | `channel` | `@handle`, channel URL, or `UC…` ID |
 | `playlist` | Playlist URL or ID with a `PL`/`UU`/`LL`/`FL`/`OL` prefix |
 | `q` | 1-200 characters |
-| `limit` | 1-50 |
+| `type` (search) | `video`, `channel`, `playlist`, `movie` |
+| `tab` (channel/videos) | `videos`, `shorts`, `streams` |
+| `tab` (channel/sections) | `featured`, `podcasts`, `releases` |
 
 ## Worked example: research workflow
 
 ```bash
 # 1. find candidates
 curl -sG https://transcriptapi.com/api/v2/youtube/search \
-  --data-urlencode "q=machine learning explained" -d limit=5 \
+  --data-urlencode "q=machine learning explained" -d type=video \
   -H "Authorization: Bearer $TRANSCRIPT_API_KEY" -H "User-Agent: YourAgent/1.0"
 
-# 2. transcribe only the ones worth reading
+# 2. check languages before spending a credit (optional, free)
+curl -sG https://transcriptapi.com/api/v2/youtube/info \
+  --data-urlencode "video_url=VIDEO_ID" \
+  -H "Authorization: Bearer $TRANSCRIPT_API_KEY" -H "User-Agent: YourAgent/1.0"
+
+# 3. transcribe only the ones worth reading
 curl -sG https://transcriptapi.com/api/v2/youtube/transcript \
   --data-urlencode "video_url=VIDEO_ID" \
   -d format=text -d include_timestamp=true -d send_metadata=true \
