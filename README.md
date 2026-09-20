@@ -21,9 +21,6 @@
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-4CAF50?style=for-the-badge" alt="MIT License"/></a>
 </p>
 
-> **Powering 15M+ transcripts every month** · 500K+ transcripts processed daily · 49ms median response time
-> Trusted in production by [youtubetotranscript.com](https://youtubetotranscript.com) (~11M/mo) and [recapio.com](https://recapio.com) (~2.8M/mo).
-
 ---
 
 ## 🧩 What is this?
@@ -62,7 +59,6 @@ Most YouTube integrations do one thing: pull a single transcript. **This is a fu
 | Channel & playlist extraction            | ✅ Yes             | ❌ No |
 | Latest-uploads monitoring (free)         | ✅ Yes             | ❌ No |
 | OAuth 2.1 + API key auth                 | ✅ Both            | ❌ Usually neither |
-| Production scale                         | ✅ Yes             | ❌ No |
 | Works on mobile Claude & web Claude      | ✅ Yes             | ❌ No |
 | Agent-friendly error messages            | ✅ Yes             | ❌ Bare HTTP codes |
 | No yt-dlp, no headless browser, no binaries | ✅ Just an API call | ❌ Blocked on cloud IPs |

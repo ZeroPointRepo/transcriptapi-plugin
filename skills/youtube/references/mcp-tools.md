@@ -36,8 +36,8 @@ moment. `"text"` is cheaper to reason over.
 
 # Transcript
 
-[0.0s] I am honored to be with you today at your commencement
-[4.12s] from one of the finest universities in the world.
+[0.0s] First line of transcript
+[4.12s] Second line of transcript
 ```
 
 **`format="json"`**
@@ -47,8 +47,8 @@ moment. `"text"` is cheaper to reason over.
   "video_id": "UF8uR6Z6KLc",
   "language": "en",
   "transcript": [
-    { "text": "I am honored to be with you today at your commencement", "start": 0.0, "duration": 4.12 },
-    { "text": "from one of the finest universities in the world.", "start": 4.12, "duration": 3.85 }
+    { "text": "First line of transcript", "start": 0.0, "duration": 4.12 },
+    { "text": "Second line of transcript", "start": 4.12, "duration": 3.85 }
   ],
   "metadata": {
     "title": "Steve Jobs' 2005 Stanford Commencement Address",
