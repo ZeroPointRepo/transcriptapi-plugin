@@ -52,10 +52,16 @@ credits, no card.
 | --- | --- | --- | --- |
 | What a video says: summarize, quote, transcribe, translate, fact-check | `get_youtube_transcript` | `GET /youtube/transcript` | 1 |
 | Captions or subtitles for a video *(same data as a transcript)* | `get_youtube_transcript` | `GET /youtube/transcript` | 1 |
-| Find videos or channels on a topic | `search_youtube` | `GET /youtube/search` | 1 / page |
+| Available transcript languages before spending a credit | `get_youtube_video_info` | `GET /youtube/info` | **free** |
+| View/like counts, publish date, description, duration, tags, related videos | `get_video_metadata` | `GET /youtube/video/metadata` | 1 |
+| Find videos, channels, playlists or movies on a topic | `search_youtube` | `GET /youtube/search` | 1 / page |
+| A channel's profile (subscribers, description, tabs, etc.) | `get_channel_info` | `GET /youtube/channel/info` | 1 |
 | What a creator posted recently | `get_channel_latest_videos` | `GET /youtube/channel/latest` | **free** |
 | Find something inside one channel | `search_channel_videos` | `GET /youtube/channel/search` | 1 / page |
-| A channel's entire upload history | `list_channel_videos` | `GET /youtube/channel/videos` | 1 / page |
+| A channel's entire upload history, Shorts, or live streams | `list_channel_videos` | `GET /youtube/channel/videos` | 1 / page |
+| The playlists on a channel | `list_channel_playlists` | `GET /youtube/channel/playlists` | 1 / page |
+| A channel's community posts | `list_channel_posts` | `GET /youtube/channel/posts` | 1 / page |
+| A channel's curated Home/podcasts/releases shelves | `get_channel_sections` | `GET /youtube/channel/sections` | 1 |
 | Every video in a playlist, course or series | `list_playlist_videos` | `GET /youtube/playlist/videos` | 1 / page |
 | Resolve an `@handle` to a `UC…` ID | *(not needed, pass the handle)* | `GET /youtube/channel/resolve` | **free** |
 

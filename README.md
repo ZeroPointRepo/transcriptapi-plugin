@@ -10,7 +10,7 @@
 
 <p align="center">
   <b>The complete YouTube toolkit as a single Agent Plugin, by <a href="https://transcriptapi.com">TranscriptAPI</a>.</b><br/>
-  YouTube transcripts, captions and subtitles, video &amp; channel search, channel browsing, playlist extraction and new-upload polling: 6 hosted MCP tools plus one comprehensive skill.<br/>
+  YouTube transcripts, video &amp; channel metadata, captions and subtitles, video &amp; channel search, channel browsing, playlist extraction and new-upload polling: 12 hosted MCP tools plus one comprehensive skill.<br/>
   One install. OAuth sign-in. No API key to manage. Free tier, no card.
 </p>
 
@@ -34,7 +34,7 @@ One install gives your agent both halves:
 
 | Component | What it does |
 |---|---|
-| **MCP server** (`transcriptapi`) | 6 hosted tools over streamable HTTP with OAuth 2.1: `get_youtube_transcript`, `search_youtube`, `get_channel_latest_videos`, `search_channel_videos`, `list_channel_videos`, `list_playlist_videos`. No key handling: your agent signs you in on first use. |
+| **MCP server** (`transcriptapi`) | 12 hosted tools over streamable HTTP with OAuth 2.1: `get_youtube_transcript`, `get_youtube_video_info`, `get_video_metadata`, `search_youtube`, `get_channel_info`, `get_channel_latest_videos`, `search_channel_videos`, `list_channel_videos`, `list_channel_playlists`, `list_channel_posts`, `get_channel_sections`, `list_playlist_videos`. No key handling: your agent signs you in on first use. |
 | **Skill** (`youtube`) | Teaches the agent *when* to reach for YouTube data, which tool answers each question, and how not to burn credits, with a full REST fallback for clients that load skills but not MCP servers. |
 
 **Just ask, in plain English:**
@@ -45,7 +45,7 @@ Find Andrew Huberman's three most-viewed videos about sleep and compare them.
 What has @TED posted in the last month?
 ```
 
-That last set of prompts touches 3 of the 6 tools (`search_youtube`, `search_channel_videos`, `get_youtube_transcript`) without you writing a line of code.
+That last set of prompts touches 3 of the 12 tools (`search_youtube`, `search_channel_videos`, `get_youtube_transcript`) without you writing a line of code.
 
 ---
 
@@ -57,7 +57,7 @@ Most YouTube integrations do one thing: pull a single transcript. **This is a fu
 | ---------------------------------------- | ----------------- | ------------------- |
 | Packaging                                | ✅ Agent Plugins 1.0.0 | ❌ Per-client manifests |
 | Hosting                                  | ✅ Remote (no local install) | ❌ Local stdio install |
-| Tools                                    | ✅ 6 tools + a skill | ❌ 1 (transcript only) |
+| Tools                                    | ✅ 12 tools + a skill | ❌ 1 (transcript only) |
 | YouTube search                           | ✅ Yes             | ❌ No |
 | Channel & playlist extraction            | ✅ Yes             | ❌ No |
 | Latest-uploads monitoring (free)         | ✅ Yes             | ❌ No |
@@ -264,9 +264,11 @@ amp mcp add transcript-api https://transcriptapi.com/mcp --header "Authorization
 
 ---
 
-## 🛠️ The 6 MCP tools
+## 🛠️ The 12 MCP tools
 
-All six are exposed automatically once you connect. **1 credit = 1 successful (HTTP 200) request.** Failed and rate-limited calls do not consume credits.
+All 12 are exposed automatically once you connect. **1 credit = 1 successful (HTTP 200) request.** Failed and rate-limited calls do not consume credits.
+
+> **Which video tool?** Use `get_youtube_video_info` (free) to discover transcript languages before fetching a transcript. Use `get_video_metadata` (1 credit) for view/like counts, publish date, description, duration, tags, or related videos.
 
 ### 1. `get_youtube_transcript`
 
@@ -310,19 +312,53 @@ JSON:
 
 </details>
 
-### 2. `search_youtube`
+### 2. `get_youtube_video_info` <sub>· **FREE**</sub>
 
-Search YouTube for videos or channels. Filter by type and paginate with a continuation token.
+Basic metadata (title, author, thumbnail) plus the available transcript languages — call before `get_youtube_transcript` to pick a language.
+
+| Parameter   | Type   | Default      | Description                                     |
+| ----------- | ------ | ------------ | ------------------------------------------------ |
+| `video_url` | string | **required** | YouTube URL (full or short) or 11-char video ID |
+
+**Cost:** Free.
+
+### 3. `get_video_metadata`
+
+Rich video metadata without needing captions: view/like-count text, publish date, structured description, channel summary, thumbnails. Optional `include` extras add duration/category/tags/caption tracks and related videos.
+
+| Parameter   | Type     | Default | Description                                                                                |
+| ----------- | -------- | ------- | -------------------------------------------------------------------------------------------- |
+| `video_url` | string   | **required** | YouTube URL (full or short) or 11-char video ID                                        |
+| `include`   | string[] | _none_  | `"details"` (duration, category, tags, caption tracks) and/or `"related"` (related videos)     |
+
+**Cost:** 1 credit.
+
+### 4. `search_youtube`
+
+Search YouTube for videos, channels, playlists, or movies. Filter by type, sort, upload date or duration, and paginate with a continuation token.
 
 | Parameter      | Type   | Default      | Description                          |
 | -------------- | ------ | ------------ | ------------------------------------ |
-| `query`        | string | **required** | Search query                         |
-| `search_type`  | string | `"video"`    | `"video"` or `"channel"`             |
+| `query`        | string | **required** (first call) | Search query            |
+| `search_type`  | string | `"video"`    | `"video"`, `"channel"`, `"playlist"`, or `"movie"` (first call only) |
+| `sort`         | string | `"relevance"` | `"relevance"` or `"views"` (first call only) |
+| `upload_date`  | string | _none_       | `hour`, `today`, `week`, `month`, `year` (first call, videos only) |
+| `duration`     | string | _none_       | `short`, `medium`, `long` (first call, videos only) |
 | `continuation` | string | `null`       | Token from a prior call for next page |
 
 **Cost:** 1 credit per page (~20 results).
 
-### 3. `get_channel_latest_videos` <sub>· **FREE**</sub>
+### 5. `get_channel_info`
+
+A channel's profile: title, `@handle`, verified flag, subscriber/video-count text, description, keywords, tags, thumbnails, banners, and the tabs it exposes.
+
+| Parameter | Type   | Default      | Description                                  |
+| --------- | ------ | ------------ | --------------------------------------------- |
+| `channel` | string | **required** | `@handle`, channel URL, or `UC…` channel ID |
+
+**Cost:** 1 credit.
+
+### 6. `get_channel_latest_videos` <sub>· **FREE**</sub>
 
 The ~15 most recent uploads from any channel via RSS. No credits. Perfect for monitoring, daily recaps, or triggering downstream pipelines.
 
@@ -332,7 +368,7 @@ The ~15 most recent uploads from any channel via RSS. No credits. Perfect for mo
 
 **Cost:** Free.
 
-### 4. `search_channel_videos`
+### 7. `search_channel_videos`
 
 Search inside one specific channel for videos matching a query.
 
@@ -344,18 +380,52 @@ Search inside one specific channel for videos matching a query.
 
 **Cost:** 1 credit per page (~30 results).
 
-### 5. `list_channel_videos`
+### 8. `list_channel_videos`
 
-List every video on a channel, ~100 per page. Ideal for building databases or bulk transcript extraction.
+List a channel's feed, paginated. Use `tab` to choose the uploads feed (default, ~100/page), Shorts, or live streams (~48/page). Ideal for building databases or bulk transcript extraction.
 
 | Parameter      | Type   | Default      | Description                          |
 | -------------- | ------ | ------------ | ------------------------------------ |
-| `channel`      | string | **required** | `@handle`, channel URL, or `UC…` ID |
+| `channel`      | string | **required** (first call) | `@handle`, channel URL, or `UC…` ID |
+| `tab`          | string | `"videos"`   | `videos` (uploads), `shorts`, or `streams`. Repeat the same `tab` when paginating. |
 | `continuation` | string | `null`       | Pagination token                     |
 
-**Cost:** 1 credit per page (~100 results).
+**Cost:** 1 credit per page.
 
-### 6. `list_playlist_videos`
+### 9. `list_channel_playlists`
+
+Paginated list of the playlists on a channel (id, title, URL, video-count text, thumbnails).
+
+| Parameter      | Type   | Default | Description                          |
+| -------------- | ------ | ------- | ------------------------------------ |
+| `channel`      | string | **required** (first call) | `@handle`, channel URL, or `UC…` ID |
+| `continuation` | string | `null`  | Pagination token                     |
+
+**Cost:** 1 credit per page.
+
+### 10. `list_channel_posts`
+
+Paginated list of a channel's community (Posts tab) content — text, publish time, like-count text, and attachments. Channels without a community tab return an empty results list, not an error.
+
+| Parameter      | Type   | Default | Description                          |
+| -------------- | ------ | ------- | ------------------------------------ |
+| `channel`      | string | **required** (first call) | `@handle`, channel URL, or `UC…` ID |
+| `continuation` | string | `null`  | Pagination token                     |
+
+**Cost:** 1 credit per page.
+
+### 11. `get_channel_sections`
+
+The curated, grouped sections of a channel page — titled shelves of videos, playlists, shorts, or featured channels, in the channel's own order.
+
+| Parameter | Type   | Default      | Description                                                     |
+| --------- | ------ | ------------ | ---------------------------------------------------------------- |
+| `channel` | string | **required** | `@handle`, channel URL, or `UC…` ID |
+| `tab`     | string | `"featured"` | `featured` (Home), `podcasts`, or `releases` |
+
+**Cost:** 1 credit.
+
+### 12. `list_playlist_videos`
 
 Every video in a YouTube playlist (PL/UU/LL/FL/OL IDs supported). Process entire courses or lecture series in a single call.
 
@@ -374,7 +444,7 @@ One skill covers everything. It teaches the agent *when* YouTube is the right so
 
 It handles both data paths automatically:
 
-- **MCP available** → drives the 6 hosted tools above. OAuth, no key.
+- **MCP available** → drives the 12 hosted tools above. OAuth, no key.
 - **MCP not available** → falls back to the REST API with a `TRANSCRIPT_API_KEY`, so the skill still works in clients that load skills but not MCP servers.
 
 Structured for [progressive disclosure](https://agentskills.io/specification#progressive-disclosure), so the agent pays for detail only when it needs it:
@@ -383,7 +453,7 @@ Structured for [progressive disclosure](https://agentskills.io/specification#pro
 skills/youtube/
 ├── SKILL.md                    # routing, credit discipline, workflows (~130 lines)
 └── references/
-    ├── mcp-tools.md            # full parameter reference for the 6 tools
+    ├── mcp-tools.md            # full parameter reference for the 12 tools
     ├── rest-api.md             # REST fallback: endpoints, curl, validation rules
     ├── auth-setup.md           # getting and persisting an API key
     └── errors.md               # error codes, retry policy, false alarms
