@@ -195,17 +195,9 @@ GET /youtube/channel/videos?continuation=TOKEN&sort=popular   # repeat tab AND s
 Provide **exactly one** of `channel` or `continuation`. The response carries
 `continuation_token` and `has_more`.
 
-Existing calls are untouched: omitting sort returns the uploads feed exactly as before. sort=latest is a different view (YouTube's Videos tab, Shorts excluded), not a re-ordering of it.
+**Sorting.** Add sort=latest, popular, or oldest to channel/videos to get a channel's videos in the order you want, for example its most-popular uploads first. A sorted page returns about 30 videos (an unsorted page returns about 100), and every page costs the same 1 credit.
 
-| | `tab=videos`, no `sort` | `tab=videos` + any `sort` |
-| --- | --- | --- |
-| Source | uploads playlist | channel Videos tab |
-| Page size | ~100 | ~30 |
-| `playlist_info` | populated | `null` |
-| Shorts | mixed in | excluded (use `tab=shorts`) |
-| Members-only videos | excluded | included, flagged `members_only: true` |
-
-They are different sets, not one list in two orders. A sorted page holds ~30 items instead of ~100, so paging a whole catalogue with `sort` set costs roughly 3.3x the pages and 3.3x the credits. Omit `sort` when you just want newest-first. `tab=shorts` / `tab=streams` read the same feed either way; there `sort` only reorders.
+When paging, send the same sort on each request.
 
 Every item carries `members_only`, `true` only when YouTube badges it "Members only", and those
 items have no `viewCountText`. `tab=streams` items carry `lengthText` and `publishedTimeText`
