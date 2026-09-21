@@ -382,13 +382,32 @@ Search inside one specific channel for videos matching a query.
 
 ### 8. `list_channel_videos`
 
-List a channel's feed, paginated. Use `tab` to choose the uploads feed (default, ~100/page), Shorts, or live streams (~48/page). Ideal for building databases or bulk transcript extraction.
+List a channel's feed, paginated. Use `tab` to choose the uploads feed (default, ~100/page), Shorts, or live streams (~48/page), and the optional `sort` to order the Videos tab by latest, popular, or oldest. Ideal for building databases or bulk transcript extraction.
 
 | Parameter      | Type   | Default      | Description                          |
 | -------------- | ------ | ------------ | ------------------------------------ |
 | `channel`      | string | **required** (first call) | `@handle`, channel URL, or `UC…` ID |
 | `tab`          | string | `"videos"`   | `videos` (uploads), `shorts`, or `streams`. Repeat the same `tab` when paginating. |
+| `sort`         | string | `null`       | `latest`, `popular`, or `oldest`. Omit for the uploads feed. Repeat the same value when paginating. |
 | `continuation` | string | `null`       | Pagination token                     |
+
+Existing calls are untouched: omitting sort returns the uploads feed exactly as before. sort=latest is a different view (YouTube's Videos tab, Shorts excluded), not a re-ordering of it.
+
+| | `tab: "videos"`, no `sort` | `tab: "videos"` + any `sort` |
+| --- | --- | --- |
+| Source | uploads playlist | channel Videos tab |
+| Page size | ~100 | ~30 |
+| `playlist_info` | populated | `null` |
+| Shorts | mixed in | excluded (use `tab: "shorts"`) |
+| Members-only videos | excluded | included, flagged `members_only: true` |
+
+Sort reads ~3.3x more pages (~30/page vs ~100), so it costs ~3.3x credits. Use it when you need ordering; most integrations don't.
+
+`tab: "shorts"` and `tab: "streams"` read the same feed either way, so there `sort` only reorders.
+
+Every item carries **`members_only`**: `true` only when YouTube badges the video "Members only", and those items have no `viewCountText`. It is always `false` on the uploads feed, on `tab: "shorts"`, and on playlists.
+
+Items from `tab: "streams"` carry `lengthText` and `publishedTimeText` (for example `Streamed 2 years ago`, or `LIVE` and a watching count while live). `tab: "shorts"` returns `null` for both, because YouTube's Shorts grid publishes neither. On the channel-tab feeds, `channelId`, `channelTitle`, `channelHandle` and `index` are `null`.
 
 **Cost:** 1 credit per page.
 

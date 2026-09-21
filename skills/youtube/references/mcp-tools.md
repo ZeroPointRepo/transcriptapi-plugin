@@ -159,13 +159,32 @@ Always better than listing a whole channel and filtering client-side.
 ## `list_channel_videos`: 1 credit per page
 
 A channel's feed, paginated. Use `tab` to choose the uploads feed (default, ~100/page), Shorts,
-or live streams (~48/page).
+or live streams (~48/page), and the optional `sort` to order the Videos tab.
 
 | Parameter | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `channel` | string | **required** (first call) | `@handle`, channel URL, or `UC…` ID |
 | `tab` | string | `"videos"` | `videos` (uploads), `shorts`, or `streams`. Repeat the same `tab` when paginating. |
+| `sort` | string | `null` | `latest`, `popular`, or `oldest`. Omit for the uploads feed. Repeat the same value when paginating. |
 | `continuation` | string | `null` | Pagination token |
+
+Existing calls are untouched: omitting sort returns the uploads feed exactly as before. sort=latest is a different view (YouTube's Videos tab, Shorts excluded), not a re-ordering of it.
+
+| | `tab: "videos"`, no `sort` | `tab: "videos"` + any `sort` |
+| --- | --- | --- |
+| Source | uploads playlist | channel Videos tab |
+| Page size | ~100 | ~30 |
+| `playlist_info` | populated | `null` |
+| Shorts | mixed in | excluded (use `tab: "shorts"`) |
+| Members-only videos | excluded | included, flagged `members_only: true` |
+
+They are different sets, not one list in two orders. A sorted page holds ~30 items instead of ~100, so paging a whole catalogue with `sort` set costs roughly 3.3x the pages and 3.3x the credits. Omit `sort` when you just want newest-first.
+
+`tab: "shorts"` and `tab: "streams"` read the same feed either way, so there `sort` only reorders.
+
+Every item carries **`members_only`**: `true` only when YouTube badges the video "Members only", and those items have no `viewCountText`. It is always `false` on the uploads feed, on `tab: "shorts"`, and on playlists.
+
+Items from `tab: "streams"` carry `lengthText` and `publishedTimeText` (for example `Streamed 2 years ago`, or `LIVE` and a watching count while live). `tab: "shorts"` returns `null` for both, because YouTube's Shorts grid publishes neither. On the channel-tab feeds, `channelId`, `channelTitle`, `channelHandle` and `index` are `null`.
 
 Only when the user genuinely wants the whole catalogue. For recent uploads use
 `get_channel_latest_videos` (free); to find something specific use `search_channel_videos`.
