@@ -95,7 +95,7 @@ Successful calls cost 1 credit unless a tool states otherwise below. Failed and 
 
 - **`get_channel_latest_videos` is free.** Reach for it first for anything about recent
   uploads. Use `list_channel_videos` only when the user genuinely wants the whole catalogue.
-- Sort a channel's videos by latest, popular, or oldest, for example most-popular first. Sorted pages return about 30 videos (unsorted about 100); each page costs 1 credit. When paging, send the same sort on each request.
+- Sort a channel's videos by latest, popular, or oldest, for example most-popular first. Sorted pages return about 30 videos (unsorted about 100); each page costs 1 credit. Sorted results come from YouTube's Videos tab (long-form only); Shorts have their own tab=shorts feed. When paging, send the same sort on each request.
 - **Search, then transcribe selectively.** Transcribing a whole page of search results is the
   single most common way to waste credits. Pick the best 2-3 hits and pull those.
 - **Search inside a channel** with `search_channel_videos` rather than listing every video and
